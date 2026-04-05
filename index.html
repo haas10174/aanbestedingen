@@ -373,6 +373,22 @@ a:hover{text-decoration:underline}
 .alert-banner .ab-icon{font-size:20px;flex-shrink:0}
 .alert-banner strong{color:var(--sun)}
 
+/* INTL CARDS */
+.intl-card{
+  display:flex;align-items:flex-start;gap:14px;
+  background:var(--s1);border:1px solid var(--border);border-radius:12px;
+  padding:16px;text-decoration:none;transition:border-color .2s,box-shadow .2s;
+}
+.intl-card:hover{border-color:rgba(0,229,160,.35);box-shadow:0 0 16px rgba(0,229,160,.06);text-decoration:none}
+.intl-flag{font-size:28px;flex-shrink:0;margin-top:2px}
+.intl-info{}
+.intl-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px}
+.intl-sub{font-size:12px;color:var(--muted);line-height:1.5}
+.intl-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.it-free{background:rgba(0,229,160,.1);color:var(--em);border:1px solid rgba(0,229,160,.2);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px}
+.it-login{background:rgba(56,189,248,.1);color:var(--sky);border:1px solid rgba(56,189,248,.2);font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px}
+.it-tag{background:var(--s2);color:var(--muted);border:1px solid var(--border);font-size:10px;padding:2px 8px;border-radius:4px}
+
 @media(max-width:1200px){
   .kpi-strip{grid-template-columns:repeat(3,1fr)}
   .charts{grid-template-columns:1fr 1fr}
@@ -402,7 +418,7 @@ a:hover{text-decoration:underline}
   <div class="topbar-right">
     <div class="live-badge"><div class="live-dot"></div> Live · 5 apr 2026</div>
     <div class="date-chip">haas10174 · ISO 27001 · 11jr After-Sales</div>
-    <button class="hosting-btn" onclick="switchTab('hosting')">🌐 Remote URL</button>
+    <a href="https://haas10174.github.io/aanbestedingen/" target="_blank" class="hosting-btn">🌐 Open Remote</a>
   </div>
 </div>
 
@@ -411,7 +427,7 @@ a:hover{text-decoration:underline}
   <div class="nav-item active" data-tab="dash" onclick="switchTab('dash')">📊 Dashboard</div>
   <div class="nav-item" data-tab="it" onclick="switchTab('it')">💻 IT Tenders (10)</div>
   <div class="nav-item" data-tab="sectors" onclick="switchTab('sectors')">🏗️ Andere Sectoren</div>
-  <div class="nav-item" data-tab="hosting" onclick="switchTab('hosting')">🌐 Remote Toegang</div>
+  <div class="nav-item" data-tab="intl" onclick="switchTab('intl')">🌍 Internationaal</div>
 </div>
 
 <!-- DASHBOARD PANE -->
@@ -474,47 +490,160 @@ a:hover{text-decoration:underline}
   <div class="cpv-grid" id="cpv-grid"></div>
 </div>
 
-<!-- HOSTING PANE -->
-<div class="pane" id="pane-hosting">
+<!-- INTERNATIONAAL PANE -->
+<div class="pane" id="pane-intl">
   <div class="hosting-hero">
-    <h3>🌐 Jouw dashboard live: https://haas10174.github.io/aanbestedingen/</h3>
-    <p>GitHub Pages is actief. Werkt overal — telefoon, tablet, werk, thuis. Gratis, permanent, geen server nodig.</p>
+    <h3>🌍 Aanbestedingen over de grens — jij bent Nederlander in België</h3>
+    <p>Als EU-burger mag je in alle EU-lidstaten inschrijven op aanbestedingen. Jouw ISO 27001 certificering is overal geldig. Hieronder alle gratis officiële databases per land/organisatie — geen abonnement nodig.</p>
   </div>
-  <div class="step-list">
-    <div class="step">
-      <div class="step-n">✓</div>
-      <div>
-        <h4>GitHub account aangemaakt ✅</h4>
-        <p>Account: <strong>haas10174</strong> — klaar.</p>
+
+  <!-- EU BREED -->
+  <div class="sec-head"><div class="tier-badge tb-1">🇪🇺 EU-Breed (alle landen)</div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px">
+
+    <a href="https://ted.europa.eu/en/advanced-search?scope=ACTIVE" target="_blank" class="intl-card">
+      <div class="intl-flag">🇪🇺</div>
+      <div class="intl-info">
+        <div class="intl-name">TED Europa — Tenders Electronic Daily</div>
+        <div class="intl-sub">Officiële EU-databank · alle landen boven drempelwaarde · gratis · geen login</div>
+        <div class="intl-tags"><span class="it-free">Gratis</span><span class="it-tag">28 landen</span><span class="it-tag">Dagelijks bijgewerkt</span></div>
       </div>
-    </div>
-    <div class="step">
-      <div class="step-n">✓</div>
-      <div>
-        <h4>Repository aangemaakt & bestanden geüpload ✅</h4>
-        <p>Repo: <a href="https://github.com/haas10174/aanbestedingen" target="_blank">github.com/haas10174/aanbestedingen</a></p>
+    </a>
+
+    <a href="https://single-market-economy.ec.europa.eu/single-market/public-procurement_en" target="_blank" class="intl-card">
+      <div class="intl-flag">🏛️</div>
+      <div class="intl-info">
+        <div class="intl-name">Europese Commissie — Eigen Aanbestedingen</div>
+        <div class="intl-sub">EC, Parlement, Raad besteden IT/consultancy/audit uit · ISO 27001 vereist</div>
+        <div class="intl-tags"><span class="it-free">Gratis</span><span class="it-tag">Brussel</span><span class="it-tag">ISO 27001 relevant</span></div>
       </div>
-    </div>
-    <div class="step">
-      <div class="step-n">✓</div>
-      <div>
-        <h4>GitHub Pages geactiveerd ✅</h4>
-        <p>Branch: main / root — live adres:</p>
-        <div class="code-blk">https://haas10174.github.io/aanbestedingen/</div>
+    </a>
+
+  </div>
+
+  <!-- NEDERLAND & BELGIE -->
+  <div class="sec-head"><div class="tier-badge tb-1">🇳🇱🇧🇪 Nederland & België</div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px">
+
+    <a href="https://www.tenderned.nl/aankondigingen/overzicht" target="_blank" class="intl-card">
+      <div class="intl-flag">🇳🇱</div>
+      <div class="intl-info">
+        <div class="intl-name">TenderNed — Nederland (officieel)</div>
+        <div class="intl-sub">Alle Nederlandse overheidsaanbestedingen · gratis account · geen abonnement</div>
+        <div class="intl-tags"><span class="it-free">Gratis</span><span class="it-tag">Gratis account</span><span class="it-tag">Officieel</span></div>
       </div>
-    </div>
-    <div class="step">
-      <div class="step-n">4</div>
-      <div>
-        <h4>Dashboard bijwerken (als je iets wilt aanpassen)</h4>
-        <p>Open terminal (Win+R → cmd) en plak dit om wijzigingen online te zetten:</p>
-        <div class="code-blk">cd C:\Users\raoul\Desktop\aanbestedingen
-git add .
-git commit -m "Update"
-git push</div>
-        <button class="copy-b" onclick="copyCode(this)">📋 Kopieer</button>
+    </a>
+
+    <a href="https://enot.publicprocurement.be" target="_blank" class="intl-card">
+      <div class="intl-flag">🇧🇪</div>
+      <div class="intl-info">
+        <div class="intl-name">e-Notification — België (officieel)</div>
+        <div class="intl-sub">Alle Belgische overheidsopdrachten · federaal + gewestelijk + lokaal · gratis</div>
+        <div class="intl-tags"><span class="it-free">Gratis</span><span class="it-tag">NL/FR/DE</span><span class="it-tag">Jouw woonplaats</span></div>
       </div>
-    </div>
+    </a>
+
+  </div>
+
+  <!-- DEFENSIE & VEILIGHEID -->
+  <div class="sec-head"><div class="tier-badge tb-2">🛡️ Defensie & Internationale Veiligheid</div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px">
+
+    <a href="https://www.eda.europa.eu/procurement" target="_blank" class="intl-card">
+      <div class="intl-flag">🛡️</div>
+      <div class="intl-info">
+        <div class="intl-name">European Defence Agency (EDA)</div>
+        <div class="intl-sub">EU defensie-aanbestedingen · IT-security · consultancy · gratis browsen</div>
+        <div class="intl-tags"><span class="it-free">Gratis</span><span class="it-tag">EU Defensie</span></div>
+      </div>
+    </a>
+
+    <a href="https://www.nspa.nato.int/business/procurement" target="_blank" class="intl-card">
+      <div class="intl-flag">🎖️</div>
+      <div class="intl-info">
+        <div class="intl-name">NSPA — NATO Support & Procurement</div>
+        <div class="intl-sub">NATO inkoop van goederen, diensten & IT · registratie vereist (gratis)</div>
+        <div class="intl-tags"><span class="it-login">Gratis registratie</span><span class="it-tag">NATO</span></div>
+      </div>
+    </a>
+
+    <a href="https://www.ncia.nato.int/procurement.html" target="_blank" class="intl-card">
+      <div class="intl-flag">💻</div>
+      <div class="intl-info">
+        <div class="intl-name">NCIA — NATO Communicatie & IT</div>
+        <div class="intl-sub">NATO IT-infrastructuur, cybersecurity, netwerken · ISO 27001 zeer relevant</div>
+        <div class="intl-tags"><span class="it-login">Registratie vereist</span><span class="it-tag">IT/Cyber</span></div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- ANDERE EU-LANDEN -->
+  <div class="sec-head"><div class="tier-badge tb-2">🌐 Andere EU-landen (dichtbij)</div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px">
+
+    <a href="https://marches.public.lu/fr.html" target="_blank" class="intl-card">
+      <div class="intl-flag">🇱🇺</div>
+      <div class="intl-info">
+        <div class="intl-name">Luxembourg — Marchés Publics</div>
+        <div class="intl-sub">Klein land, hoge contractwaarden. IT & consultancy populair. Frans/Duits.</div>
+        <div class="intl-tags"><span class="it-free">Gratis</span><span class="it-tag">Dicht bij BE</span></div>
+      </div>
+    </a>
+
+    <a href="https://dtvp.de/" target="_blank" class="intl-card">
+      <div class="intl-flag">🇩🇪</div>
+      <div class="intl-info">
+        <div class="intl-name">DTVP — Duits Vergabeportal</div>
+        <div class="intl-sub">Grootste EU-markt. IT-security & medische diensten enorm. Duits vereist.</div>
+        <div class="intl-tags"><span class="it-free">Gratis browsen</span><span class="it-tag">Grote markt</span></div>
+      </div>
+    </a>
+
+    <a href="https://www.find-tender.service.gov.uk/Search" target="_blank" class="intl-card">
+      <div class="intl-flag">🇬🇧</div>
+      <div class="intl-info">
+        <div class="intl-name">Find a Tender — Verenigd Koninkrijk</div>
+        <div class="intl-sub">Post-Brexit eigen platform. ISO 27001 verplicht voor overheids-IT. Engels.</div>
+        <div class="intl-tags"><span class="it-free">Gratis</span><span class="it-tag">Engelstalig</span></div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- WERELDWIJD -->
+  <div class="sec-head"><div class="tier-badge tb-3">🌐 Wereldwijd (voor later)</div></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px">
+
+    <a href="https://www.ungm.org" target="_blank" class="intl-card">
+      <div class="intl-flag">🇺🇳</div>
+      <div class="intl-info">
+        <div class="intl-name">UNGM — UN Global Marketplace</div>
+        <div class="intl-sub">Alle VN-organisaties (WHO, UNICEF, UNHCR etc.) · IT & medische diensten · gratis registreren</div>
+        <div class="intl-tags"><span class="it-login">Gratis registratie</span><span class="it-tag">Wereldwijd</span><span class="it-tag">Medisch + IT</span></div>
+      </div>
+    </a>
+
+    <a href="https://projects.worldbank.org/en/projects-operations/procurement" target="_blank" class="intl-card">
+      <div class="intl-flag">🏦</div>
+      <div class="intl-info">
+        <div class="intl-name">World Bank — Procurement</div>
+        <div class="intl-sub">Ontwikkelingsprojecten wereldwijd · IT-systemen, gezondheidszorg, consultancy</div>
+        <div class="intl-tags"><span class="it-free">Gratis</span><span class="it-tag">Grote contracten</span></div>
+      </div>
+    </a>
+
+  </div>
+
+  <!-- TED ZOEKSTRATEGIE -->
+  <div class="sec-head"><div class="tier-badge tb-1">🔍 TED Europa — Zoeklinks voor Jouw Profiel</div></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+    <a href="https://ted.europa.eu/en/advanced-search?scope=ACTIVE&query=ISO+27001+audit&buyers-country=BE,NL,LU" target="_blank" class="cpv-item"><div><div class="cn">📋 ISO 27001 audits (NL+BE+LU)</div><div class="cc">Jouw sterkste propositie</div></div><span style="font-size:10px;background:rgba(0,229,160,.1);color:var(--em);border:1px solid rgba(0,229,160,.2);border-radius:4px;padding:2px 7px;font-weight:700">Gratis</span></a>
+    <a href="https://ted.europa.eu/en/advanced-search?scope=ACTIVE&query=medical+equipment+maintenance&buyers-country=NL,BE" target="_blank" class="cpv-item"><div><div class="cn">🔧 Medische apparatuur (NL+BE)</div><div class="cc">CPV 50420000</div></div><span style="font-size:10px;background:rgba(0,229,160,.1);color:var(--em);border:1px solid rgba(0,229,160,.2);border-radius:4px;padding:2px 7px;font-weight:700">Gratis</span></a>
+    <a href="https://ted.europa.eu/en/advanced-search?scope=ACTIVE&query=cybersecurity+managed+services&buyers-country=NL,BE,LU,DE" target="_blank" class="cpv-item"><div><div class="cn">🔐 Cybersecurity MSP (NL+BE+LU+DE)</div><div class="cc">CPV 72000000</div></div><span style="font-size:10px;background:rgba(0,229,160,.1);color:var(--em);border:1px solid rgba(0,229,160,.2);border-radius:4px;padding:2px 7px;font-weight:700">Gratis</span></a>
+    <a href="https://ted.europa.eu/en/advanced-search?scope=ACTIVE&query=NIS2+compliance+audit" target="_blank" class="cpv-item"><div><div class="cn">🛡️ NIS2 compliance (heel EU)</div><div class="cc">Jouw 27001 cert = directe match</div></div><span style="font-size:10px;background:rgba(0,229,160,.1);color:var(--em);border:1px solid rgba(0,229,160,.2);border-radius:4px;padding:2px 7px;font-weight:700">Gratis</span></a>
+    <a href="https://ted.europa.eu/en/advanced-search?scope=ACTIVE&query=security+awareness+training&buyers-country=NL,BE" target="_blank" class="cpv-item"><div><div class="cn">🎓 Security training (NL+BE)</div><div class="cc">CPV 80510000</div></div><span style="font-size:10px;background:rgba(0,229,160,.1);color:var(--em);border:1px solid rgba(0,229,160,.2);border-radius:4px;padding:2px 7px;font-weight:700">Gratis</span></a>
+    <a href="https://ted.europa.eu/en/advanced-search?scope=ACTIVE&query=healthcare+IT+helpdesk&buyers-country=NL,BE,LU" target="_blank" class="cpv-item"><div><div class="cn">🏥 Zorg IT-helpdesk (NL+BE+LU)</div><div class="cc">Medische CS achtergrond</div></div><span style="font-size:10px;background:rgba(0,229,160,.1);color:var(--em);border:1px solid rgba(0,229,160,.2);border-radius:4px;padding:2px 7px;font-weight:700">Gratis</span></a>
   </div>
 </div>
 
@@ -881,6 +1010,12 @@ function switchTab(name){
   document.querySelectorAll('.nav-item').forEach(n=>{n.classList.remove('active');if(n.dataset.tab===name)n.classList.add('active')});
   document.querySelectorAll('.pane').forEach(p=>{p.classList.remove('active');if(p.id==='pane-'+name)p.classList.add('active')});
 }
+// Fix: intl tab button in topbar
+document.addEventListener('DOMContentLoaded',()=>{
+  document.querySelectorAll('[onclick*="hosting"]').forEach(el=>{
+    el.setAttribute('onclick',el.getAttribute('onclick').replace('hosting','intl'));
+  });
+});
 
 document.addEventListener('DOMContentLoaded',()=>{
   // Render tenders
