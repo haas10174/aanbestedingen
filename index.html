@@ -7,975 +7,993 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 :root {
-  --bg:#0f1117;--surface:#1a1d27;--surface2:#222636;--border:#2e3347;
-  --accent:#4f8ef7;--accent2:#7c5cbf;--green:#22c55e;--orange:#f59e0b;
-  --red:#ef4444;--text:#e2e8f0;--muted:#8892a4;--yellow:#eab308;
+  --bg:#080c12;
+  --s1:#0f1520;
+  --s2:#151e2e;
+  --s3:#1c2840;
+  --border:#243045;
+  --em:#00e5a0;    /* emerald — primary */
+  --em2:#00b87d;
+  --fire:#ff5f2e;  /* orange-red */
+  --sun:#ffc845;   /* amber */
+  --sky:#38bdf8;   /* sky blue accent */
+  --rose:#ff4d6d;
+  --text:#dde6f0;
+  --muted:#6b7f99;
+  --t1c:#00e5a0;
+  --t2c:#ffc845;
+  --t3c:#ff5f2e;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.5}
-a{color:var(--accent);text-decoration:none}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;line-height:1.6}
+a{color:var(--em);text-decoration:none}
 a:hover{text-decoration:underline}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--s1)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
 
-/* HEADER */
-.header{background:linear-gradient(135deg,#1a1d27,#0f1117);border-bottom:1px solid var(--border);padding:20px 28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
-.header h1{font-size:20px;font-weight:800}
-.header h1 span{color:var(--accent)}
-.header-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.badge{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:6px 14px;font-size:12px;color:var(--muted)}
-.badge strong{color:var(--accent)}
-.date-badge{font-size:11px;color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:4px 10px}
-.deploy-btn{background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:12px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-block}
-.deploy-btn:hover{opacity:0.9;text-decoration:none;color:#fff}
+/* TOPBAR */
+.topbar{
+  background:linear-gradient(90deg,#0a1020 0%,#0d1828 50%,#0a1020 100%);
+  border-bottom:1px solid var(--border);
+  padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;
+  height:56px;position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 20px rgba(0,0,0,.4);
+}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-dot{width:10px;height:10px;border-radius:50%;background:var(--em);box-shadow:0 0 8px var(--em)}
+.logo h1{font-size:16px;font-weight:800;letter-spacing:-.3px}
+.logo h1 span{color:var(--em)}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.live-badge{
+  background:rgba(0,229,160,.08);border:1px solid rgba(0,229,160,.25);
+  color:var(--em);border-radius:999px;padding:4px 12px;font-size:11px;font-weight:700;
+  display:flex;align-items:center;gap:5px;
+}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--em);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.date-chip{background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:4px 12px;font-size:11px;color:var(--muted)}
+.hosting-btn{
+  background:linear-gradient(135deg,var(--em),var(--em2));
+  color:#06100e;font-weight:800;border:none;border-radius:8px;
+  padding:7px 16px;font-size:12px;cursor:pointer;
+  box-shadow:0 0 16px rgba(0,229,160,.2);
+}
+.hosting-btn:hover{opacity:.85}
 
-/* TABS */
-.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);padding:0 28px;background:var(--surface);position:sticky;top:0;z-index:100}
-.tab{padding:12px 20px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.2s}
-.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
-.tab:hover{color:var(--text)}
-.tab-pane{display:none;padding:24px 28px}
-.tab-pane.active{display:block}
+/* NAV */
+.nav{
+  background:var(--s1);border-bottom:1px solid var(--border);
+  padding:0 32px;display:flex;align-items:center;gap:2px;
+  position:sticky;top:56px;z-index:199;
+}
+.nav-item{
+  padding:12px 18px;font-size:13px;font-weight:600;color:var(--muted);
+  cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap;
+}
+.nav-item:hover{color:var(--text)}
+.nav-item.active{color:var(--em);border-bottom-color:var(--em)}
 
-/* KPI */
-.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:24px}
-.kpi{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
-.kpi .val{font-size:22px;font-weight:800;color:var(--accent)}
-.kpi .lbl{font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.05em}
-.kpi.g .val{color:var(--green)}
-.kpi.o .val{color:var(--orange)}
-.kpi.p .val{color:var(--accent2)}
-.kpi.r .val{color:var(--red)}
+/* PANES */
+.pane{display:none;padding:28px 32px;animation:fadeIn .2s ease}
+.pane.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* KPI STRIP */
+.kpi-strip{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:28px;
+}
+.kpi{
+  background:var(--s1);border:1px solid var(--border);border-radius:12px;
+  padding:16px;text-align:center;position:relative;overflow:hidden;
+}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--em);opacity:.4}
+.kpi.fire::before{background:var(--fire)}
+.kpi.sun::before{background:var(--sun)}
+.kpi.sky::before{background:var(--sky)}
+.kpi .v{font-size:22px;font-weight:900;color:var(--em)}
+.kpi.fire .v{color:var(--fire)}
+.kpi.sun .v{color:var(--sun)}
+.kpi.sky .v{color:var(--sky)}
+.kpi .l{font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.06em}
 
 /* CHARTS */
-.charts-row{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:16px;margin-bottom:24px}
-.chart-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px}
-.chart-card h3{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:14px}
+.charts{display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:16px;margin-bottom:28px}
+.chart-box{background:var(--s1);border:1px solid var(--border);border-radius:12px;padding:20px}
+.chart-box h3{font-size:11px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:14px}
 .chart-wrap{position:relative;height:200px}
 
+/* SECTION HEADER */
+.sec-head{
+  display:flex;align-items:center;gap:12px;margin-bottom:14px;margin-top:28px;
+}
+.sec-head:first-of-type{margin-top:0}
+.tier-badge{
+  font-size:11px;font-weight:800;padding:3px 12px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em;
+}
+.tb-1{background:rgba(0,229,160,.12);color:var(--em);border:1px solid rgba(0,229,160,.25)}
+.tb-2{background:rgba(255,200,69,.1);color:var(--sun);border:1px solid rgba(255,200,69,.25)}
+.tb-3{background:rgba(255,95,46,.1);color:var(--fire);border:1px solid rgba(255,95,46,.25)}
+.sec-head span{font-size:12px;color:var(--muted)}
+
 /* TENDER CARDS */
-.section-title{font-size:15px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:10px}
-.sector-tag{font-size:10px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;padding:2px 8px;color:var(--muted);font-weight:500}
+.tender-stack{display:flex;flex-direction:column;gap:8px;margin-bottom:4px}
 
-.tender-list{display:flex;flex-direction:column;gap:10px}
-.tender-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;transition:border-color .2s}
-.tender-card:hover{border-color:var(--accent)}
-.tender-card.t1{border-left:3px solid var(--green)}
-.tender-card.t2{border-left:3px solid var(--orange)}
-.tender-card.t3{border-left:3px solid var(--red)}
+.tc{
+  background:var(--s1);border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;transition:border-color .2s,box-shadow .2s;
+}
+.tc:hover{border-color:rgba(0,229,160,.3);box-shadow:0 0 20px rgba(0,229,160,.05)}
+.tc.t1{border-left:3px solid var(--em)}
+.tc.t2{border-left:3px solid var(--sun)}
+.tc.t3{border-left:3px solid var(--fire)}
 
-.tender-main{display:grid;grid-template-columns:40px 1fr 140px 130px 110px 110px 90px 100px;align-items:center;gap:14px;padding:14px 18px;cursor:pointer}
-.rank{font-size:18px;font-weight:900;text-align:center;color:var(--muted)}
-.t1 .rank{color:var(--green)}
-.t2 .rank{color:var(--orange)}
-.t3 .rank{color:var(--red)}
+.tc-top{
+  display:grid;
+  grid-template-columns:38px 1fr 150px 130px 110px 110px 86px 90px 36px;
+  align-items:center;gap:14px;padding:14px 16px;
+}
+.tc-rank{font-size:17px;font-weight:900;color:var(--muted);text-align:center}
+.t1 .tc-rank{color:var(--em)}
+.t2 .tc-rank{color:var(--sun)}
+.t3 .tc-rank{color:var(--fire)}
 
-.t-title{font-weight:700;font-size:13px}
-.t-auth{font-size:11px;color:var(--muted);margin-top:2px}
-.t-sector{font-size:10px;margin-top:4px}
-.t-deadline{font-size:11px;margin-top:4px;font-weight:600}
-.urgent{color:var(--red)}
-.soon{color:var(--orange)}
-.ok{color:var(--green)}
-.ongoing{color:var(--accent)}
+.tc-main{}
+.tc-title{
+  font-weight:700;font-size:13.5px;color:var(--text);
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+}
+.tc-title a{
+  color:var(--text);text-decoration:none;
+  border-bottom:1px dashed rgba(255,255,255,.15);
+  transition:color .2s;
+}
+.tc-title a:hover{color:var(--em);text-decoration:none;border-bottom-color:var(--em)}
+.tn-pill{
+  font-size:10px;background:rgba(56,189,248,.1);color:var(--sky);
+  border:1px solid rgba(56,189,248,.2);border-radius:4px;padding:1px 7px;
+  font-weight:700;white-space:nowrap;flex-shrink:0;
+}
+.tc-auth{font-size:11px;color:var(--muted);margin-top:2px}
+.tc-dead{font-size:11px;font-weight:700;margin-top:4px}
+.dl-urgent{color:var(--rose)}
+.dl-soon{color:var(--sun)}
+.dl-ok{color:var(--em)}
+.dl-ongoing{color:var(--sky)}
 
-.metric{text-align:center}
-.metric .num{font-size:14px;font-weight:700}
-.metric .sub{font-size:10px;color:var(--muted);margin-top:2px}
-.bar{height:4px;border-radius:2px;background:var(--surface2);margin-top:5px;overflow:hidden}
-.bar .fill{height:100%;border-radius:2px}
-.bg-green{background:var(--green)}
-.bg-orange{background:var(--orange)}
-.bg-red{background:var(--red)}
-.bg-blue{background:var(--accent)}
-.bg-purple{background:var(--accent2)}
+.met{text-align:center}
+.met .n{font-size:14px;font-weight:800}
+.met .s{font-size:10px;color:var(--muted);margin-top:1px}
+.minibar{height:3px;border-radius:2px;background:var(--s3);margin-top:5px;overflow:hidden}
+.minibar .f{height:100%;border-radius:2px}
 
-.score-box{text-align:center;background:var(--surface2);border-radius:6px;padding:8px}
-.score-box .big{font-size:20px;font-weight:900}
-.score-box .lbl{font-size:9px;color:var(--muted);text-transform:uppercase}
-.sh .big{color:var(--green)}
-.sm .big{color:var(--orange)}
-.sl .big{color:var(--red)}
+.score-pip{
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:8px;padding:9px 6px;text-align:center;
+}
+.score-pip .big{font-size:19px;font-weight:900}
+.score-pip .sub{font-size:9px;color:var(--muted);text-transform:uppercase;margin-top:1px}
+.sp-hi .big{color:var(--em)}
+.sp-md .big{color:var(--sun)}
+.sp-lo .big{color:var(--fire)}
 
-.expand-icon{font-size:16px;color:var(--muted);transition:transform .2s;text-align:center}
-.tender-card.open .expand-icon{transform:rotate(180deg)}
+.toggle-btn{
+  width:28px;height:28px;border-radius:50%;
+  background:var(--s2);border:1px solid var(--border);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:12px;color:var(--muted);transition:all .2s;flex-shrink:0;
+}
+.toggle-btn:hover{border-color:var(--em);color:var(--em)}
+.tc.open .toggle-btn{background:rgba(0,229,160,.1);border-color:var(--em);color:var(--em);transform:rotate(180deg)}
 
 /* DETAIL PANEL */
-.tender-detail{display:none;border-top:1px solid var(--border);padding:20px 18px;background:var(--surface2)}
-.tender-card.open .tender-detail{display:block}
-.detail-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
-.detail-section{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px}
-.detail-section h4{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:10px}
-.doc-link{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:6px;background:var(--surface2);border:1px solid var(--border);margin-bottom:6px;font-size:12px;transition:border-color .2s}
-.doc-link:hover{border-color:var(--accent);text-decoration:none}
-.doc-link .doc-icon{font-size:16px;flex-shrink:0}
-.doc-link .doc-info{flex:1}
-.doc-link .doc-name{font-weight:600;color:var(--text);font-size:12px}
-.doc-link .doc-sub{font-size:10px;color:var(--muted)}
-.doc-link .doc-status{font-size:10px;padding:2px 7px;border-radius:4px}
-.free{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
-.login{background:rgba(79,142,247,.12);color:var(--accent);border:1px solid rgba(79,142,247,.25)}
+.tc-detail{display:none;border-top:1px solid var(--border);padding:20px 16px;background:var(--s2)}
+.tc.open .tc-detail{display:block}
 
-.notes-area{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px;color:var(--text);font-size:12px;font-family:inherit;resize:vertical;min-height:80px}
-.notes-area:focus{outline:none;border-color:var(--accent)}
-.save-note{background:var(--accent);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-size:11px;font-weight:700;cursor:pointer;margin-top:6px}
-.save-note:hover{opacity:.85}
+.why-box{
+  background:rgba(0,229,160,.05);border:1px solid rgba(0,229,160,.15);
+  border-radius:8px;padding:12px 14px;font-size:12px;color:var(--muted);margin-bottom:16px;
+  line-height:1.6;
+}
+.why-box strong{color:var(--em)}
 
-.status-select{background:var(--surface2);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:6px 10px;font-size:12px;font-family:inherit;cursor:pointer;width:100%}
-.status-select:focus{outline:none;border-color:var(--accent)}
+.detail-cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.dc{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:14px}
+.dc h4{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:12px}
 
-.info-row{display:flex;flex-direction:column;gap:5px}
-.info-item{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;font-size:12px;padding:4px 0;border-bottom:1px solid var(--border)}
-.info-item:last-child{border-bottom:none}
-.info-item .key{color:var(--muted);flex-shrink:0}
-.info-item .val{color:var(--text);text-align:right;font-weight:500}
+.doc-row{
+  display:flex;align-items:center;gap:10px;
+  padding:8px 10px;border-radius:7px;background:var(--s2);
+  border:1px solid var(--border);margin-bottom:6px;
+  text-decoration:none;transition:border-color .2s;
+}
+.doc-row:hover{border-color:var(--em);text-decoration:none}
+.doc-row .di{flex:1}
+.doc-row .dn{font-size:12px;font-weight:600;color:var(--text)}
+.doc-row .ds{font-size:10px;color:var(--muted)}
+.tag-free{background:rgba(0,229,160,.12);color:var(--em);border:1px solid rgba(0,229,160,.25);font-size:10px;padding:2px 8px;border-radius:4px;font-weight:700;flex-shrink:0}
+.tag-login{background:rgba(56,189,248,.1);color:var(--sky);border:1px solid rgba(56,189,248,.2);font-size:10px;padding:2px 8px;border-radius:4px;font-weight:700;flex-shrink:0}
 
-/* SECTOR PAGE */
-.sector-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px}
-.sector-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;cursor:pointer;transition:border-color .2s}
-.sector-card:hover{border-color:var(--accent)}
-.sector-card .icon{font-size:28px;margin-bottom:8px}
-.sector-card h4{font-size:14px;font-weight:700;margin-bottom:4px}
-.sector-card p{font-size:12px;color:var(--muted);line-height:1.4}
-.sector-card .fit{font-size:11px;margin-top:8px;padding:3px 8px;border-radius:4px;display:inline-block}
-.fit-high{background:rgba(34,197,94,.15);color:var(--green);border:1px solid rgba(34,197,94,.3)}
-.fit-mid{background:rgba(245,158,11,.15);color:var(--orange);border:1px solid rgba(245,158,11,.3)}
-.fit-low{background:rgba(79,142,247,.12);color:var(--accent);border:1px solid rgba(79,142,247,.25)}
-.search-btn{display:inline-flex;align-items:center;gap:6px;background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.3);color:var(--accent);border-radius:6px;padding:6px 12px;font-size:11px;font-weight:600;text-decoration:none;margin-top:8px}
-.search-btn:hover{background:rgba(79,142,247,.2);text-decoration:none}
+.btn-tn{
+  display:block;text-align:center;margin-top:10px;
+  background:linear-gradient(135deg,var(--em),var(--em2));
+  color:#06100e;font-weight:800;font-size:12px;
+  padding:9px;border-radius:8px;text-decoration:none;
+  box-shadow:0 0 14px rgba(0,229,160,.15);
+}
+.btn-tn:hover{opacity:.85;text-decoration:none}
+.btn-ted{
+  display:block;text-align:center;margin-top:6px;
+  background:var(--s2);border:1px solid var(--border);
+  color:var(--muted);font-size:11px;font-weight:600;
+  padding:7px;border-radius:8px;text-decoration:none;
+  transition:border-color .2s,color .2s;
+}
+.btn-ted:hover{border-color:var(--sky);color:var(--sky);text-decoration:none}
 
-/* HOSTING PAGE */
-.hosting-steps{display:flex;flex-direction:column;gap:14px}
-.step{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:18px;display:grid;grid-template-columns:48px 1fr;gap:16px;align-items:start}
-.step-num{width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;font-size:18px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.step h4{font-size:14px;font-weight:700;margin-bottom:6px}
-.step p{font-size:12px;color:var(--muted);margin-bottom:10px}
-.code-block{background:#0a0c14;border:1px solid var(--border);border-radius:6px;padding:12px;font-family:monospace;font-size:12px;color:#a5f3fc;overflow-x:auto;white-space:pre;margin-top:8px}
-.copy-btn{background:var(--surface2);border:1px solid var(--border);color:var(--muted);border-radius:4px;padding:3px 10px;font-size:11px;cursor:pointer;margin-top:6px}
-.copy-btn:hover{border-color:var(--accent);color:var(--accent)}
-.highlight-box{background:linear-gradient(135deg,rgba(79,142,247,.1),rgba(124,92,191,.1));border:1px solid rgba(79,142,247,.3);border-radius:10px;padding:18px;margin-bottom:24px}
-.highlight-box h3{font-size:15px;color:var(--accent);margin-bottom:6px}
-.highlight-box p{font-size:13px;color:var(--muted)}
+.info-table{display:flex;flex-direction:column;gap:0}
+.irow{
+  display:flex;justify-content:space-between;align-items:flex-start;
+  padding:6px 0;border-bottom:1px solid var(--border);font-size:12px;gap:8px;
+}
+.irow:last-child{border-bottom:none}
+.irow .ik{color:var(--muted);flex-shrink:0}
+.irow .iv{color:var(--text);font-weight:600;text-align:right}
 
-/* RESPONSIVE */
+.notes-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.status-sel{
+  width:100%;background:var(--s2);border:1px solid var(--border);
+  color:var(--text);border-radius:7px;padding:7px 10px;
+  font-size:12px;font-family:inherit;cursor:pointer;margin-bottom:10px;
+}
+.status-sel:focus{outline:none;border-color:var(--em)}
+.notes-ta{
+  width:100%;background:var(--s2);border:1px solid var(--border);
+  color:var(--text);border-radius:7px;padding:10px;
+  font-size:12px;font-family:inherit;resize:vertical;min-height:80px;
+}
+.notes-ta:focus{outline:none;border-color:var(--em)}
+.save-btn{
+  margin-top:7px;background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.25);
+  color:var(--em);border-radius:7px;padding:6px 16px;
+  font-size:11px;font-weight:700;cursor:pointer;
+}
+.save-btn:hover{background:rgba(0,229,160,.2)}
+
+/* SECTOR GRID */
+.sector-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px}
+.sc{
+  background:var(--s1);border:1px solid var(--border);border-radius:12px;
+  padding:18px;transition:border-color .2s,box-shadow .2s;
+}
+.sc:hover{border-color:rgba(0,229,160,.3);box-shadow:0 0 16px rgba(0,229,160,.05)}
+.sc .ic{font-size:26px;margin-bottom:10px}
+.sc h4{font-size:14px;font-weight:700;margin-bottom:5px}
+.sc p{font-size:12px;color:var(--muted);line-height:1.5}
+.fit-pill{display:inline-block;margin-top:10px;font-size:10px;font-weight:800;padding:3px 10px;border-radius:999px}
+.fp-hi{background:rgba(0,229,160,.12);color:var(--em);border:1px solid rgba(0,229,160,.25)}
+.fp-md{background:rgba(255,200,69,.1);color:var(--sun);border:1px solid rgba(255,200,69,.25)}
+.fp-lo{background:rgba(56,189,248,.1);color:var(--sky);border:1px solid rgba(56,189,248,.2)}
+.sc-links{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.sc-link{
+  font-size:11px;font-weight:600;padding:5px 12px;border-radius:6px;
+  background:var(--s2);border:1px solid var(--border);color:var(--muted);
+  text-decoration:none;transition:all .2s;
+}
+.sc-link:hover{border-color:var(--em);color:var(--em);text-decoration:none}
+
+/* NON-IT TENDER CARDS */
+.nit-card{
+  background:var(--s1);border:1px solid var(--border);border-left:3px solid var(--sun);
+  border-radius:12px;padding:16px 18px;margin-bottom:8px;
+  display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;
+  transition:border-color .2s;
+}
+.nit-card:hover{border-color:rgba(255,200,69,.4)}
+.nit-card.best{border-left-color:var(--em)}
+.nit-card.best:hover{border-color:rgba(0,229,160,.4)}
+.nit-left{}
+.nit-title{font-size:14px;font-weight:800}
+.nit-auth{font-size:11px;color:var(--muted);margin-top:3px}
+.nit-dead{font-size:11px;color:var(--sun);font-weight:700;margin-top:5px}
+.nit-why{font-size:12px;color:var(--muted);margin-top:7px;max-width:650px;line-height:1.5}
+.nit-right{display:flex;flex-direction:column;gap:7px;min-width:150px}
+.nit-val-box{
+  background:var(--s2);border:1px solid var(--border);border-radius:8px;
+  padding:10px;text-align:center;
+}
+.nit-val-box .nv{font-size:16px;font-weight:900;color:var(--sun)}
+.nit-val-box .nl{font-size:9px;color:var(--muted);text-transform:uppercase}
+.nit-btn{
+  display:block;text-align:center;background:var(--s2);
+  border:1px solid var(--border);color:var(--muted);
+  border-radius:7px;padding:7px;font-size:11px;font-weight:700;
+  text-decoration:none;transition:all .2s;
+}
+.nit-btn:hover{border-color:var(--em);color:var(--em);text-decoration:none}
+.nit-best-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  background:rgba(0,229,160,.1);border:1px solid rgba(0,229,160,.25);
+  color:var(--em);border-radius:999px;font-size:10px;font-weight:800;
+  padding:3px 10px;margin-bottom:5px;
+}
+.diff-stars{font-size:12px;margin-top:4px;color:var(--sun)}
+
+/* HOSTING */
+.hosting-hero{
+  background:linear-gradient(135deg,rgba(0,229,160,.08),rgba(56,189,248,.05));
+  border:1px solid rgba(0,229,160,.2);border-radius:12px;
+  padding:22px 26px;margin-bottom:24px;
+}
+.hosting-hero h3{font-size:16px;color:var(--em);margin-bottom:6px}
+.hosting-hero p{font-size:13px;color:var(--muted)}
+.step-list{display:flex;flex-direction:column;gap:12px}
+.step{
+  background:var(--s1);border:1px solid var(--border);border-radius:12px;
+  padding:18px;display:grid;grid-template-columns:44px 1fr;gap:16px;align-items:start;
+}
+.step-n{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,var(--em),var(--em2));
+  color:#06100e;font-size:17px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.step h4{font-size:14px;font-weight:700;margin-bottom:5px}
+.step p{font-size:12px;color:var(--muted);margin-bottom:8px}
+.code-blk{
+  background:#060a10;border:1px solid var(--border);border-radius:7px;
+  padding:12px 14px;font-family:monospace;font-size:12px;color:#7ef9d0;
+  overflow-x:auto;white-space:pre;margin-top:6px;
+}
+.copy-b{
+  margin-top:6px;background:var(--s2);border:1px solid var(--border);
+  color:var(--muted);border-radius:5px;padding:4px 12px;font-size:11px;cursor:pointer;
+}
+.copy-b:hover{border-color:var(--em);color:var(--em)}
+
+/* CPV links grid */
+.cpv-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.cpv-item{
+  background:var(--s1);border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;display:flex;justify-content:space-between;align-items:center;
+  text-decoration:none;transition:border-color .2s;gap:8px;
+}
+.cpv-item:hover{border-color:var(--em);text-decoration:none}
+.cpv-item .cn{font-size:12px;font-weight:600;color:var(--text)}
+.cpv-item .cc{font-size:10px;color:var(--muted)}
+
+/* ALERT BANNER */
+.alert-banner{
+  background:rgba(255,200,69,.07);border:1px solid rgba(255,200,69,.25);
+  border-radius:10px;padding:14px 18px;margin-bottom:20px;
+  display:flex;align-items:center;gap:12px;font-size:13px;
+}
+.alert-banner .ab-icon{font-size:20px;flex-shrink:0}
+.alert-banner strong{color:var(--sun)}
+
 @media(max-width:1200px){
-  .kpi-row{grid-template-columns:repeat(3,1fr)}
-  .charts-row{grid-template-columns:1fr 1fr}
-  .tender-main{grid-template-columns:36px 1fr 120px 110px 100px 100px 80px 90px}
-  .detail-grid{grid-template-columns:1fr 1fr}
+  .kpi-strip{grid-template-columns:repeat(3,1fr)}
+  .charts{grid-template-columns:1fr 1fr}
+  .tc-top{grid-template-columns:36px 1fr 130px 110px 100px;gap:10px}
+  .tc-top .met:nth-child(n+6){display:none}
+  .detail-cols{grid-template-columns:1fr 1fr}
   .sector-grid{grid-template-columns:repeat(2,1fr)}
 }
-@media(max-width:900px){
-  .tender-main{grid-template-columns:36px 1fr 110px 90px;gap:10px}
-  .tender-main .metric:nth-child(n+5){display:none}
-  .charts-row{grid-template-columns:1fr}
-  .detail-grid{grid-template-columns:1fr}
+@media(max-width:800px){
+  .pane{padding:20px 16px}
+  .tc-top{grid-template-columns:32px 1fr 100px 80px}
+  .tc-top>*:nth-child(n+5){display:none}
+  .detail-cols{grid-template-columns:1fr}
+  .sector-grid{grid-template-columns:1fr}
+  .cpv-grid{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div>
-    <h1>📋 Aanbestedingen <span>Dashboard</span></h1>
-    <div style="font-size:11px;color:var(--muted);margin-top:2px">Bijgewerkt: 5 april 2026 · Gratis bronnen: TenderNed + TED Europa</div>
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <h1>Aanbestedingen <span>Dashboard</span></h1>
   </div>
-  <div class="header-right">
-    <div class="badge"><strong>Profiel:</strong> ISO 27001 · 11jr Medical After-Sales · Beginner</div>
-    <span class="date-badge">📅 5 april 2026</span>
-    <a href="#" class="deploy-btn" onclick="document.querySelector('[data-tab=hosting]').click();return false">🌐 Remote Hosting Setup</a>
+  <div class="topbar-right">
+    <div class="live-badge"><div class="live-dot"></div> Live · 5 apr 2026</div>
+    <div class="date-chip">haas10174 · ISO 27001 · 11jr After-Sales</div>
+    <button class="hosting-btn" onclick="switchTab('hosting')">🌐 Remote URL</button>
   </div>
 </div>
 
-<div class="tabs">
-  <div class="tab active" data-tab="dashboard" onclick="switchTab('dashboard')">📊 Dashboard</div>
-  <div class="tab" data-tab="it" onclick="switchTab('it')">💻 IT Tenders (10)</div>
-  <div class="tab" data-tab="sectors" onclick="switchTab('sectors')">🏗️ Andere Sectoren</div>
-  <div class="tab" data-tab="hosting" onclick="switchTab('hosting')">🌐 Remote Toegang</div>
+<!-- NAV -->
+<div class="nav">
+  <div class="nav-item active" data-tab="dash" onclick="switchTab('dash')">📊 Dashboard</div>
+  <div class="nav-item" data-tab="it" onclick="switchTab('it')">💻 IT Tenders (10)</div>
+  <div class="nav-item" data-tab="sectors" onclick="switchTab('sectors')">🏗️ Andere Sectoren</div>
+  <div class="nav-item" data-tab="hosting" onclick="switchTab('hosting')">🌐 Remote Toegang</div>
 </div>
 
-<!-- DASHBOARD TAB -->
-<div class="tab-pane active" id="tab-dashboard">
-  <div class="kpi-row">
-    <div class="kpi"><div class="val">10</div><div class="lbl">IT Tenders</div></div>
-    <div class="kpi g"><div class="val">€2,3B+</div><div class="lbl">Totale markt</div></div>
-    <div class="kpi o"><div class="val">€929k</div><div class="lbl">Verwachte winst (EV)</div></div>
-    <div class="kpi"><div class="val">3</div><div class="lbl">Nu starten</div></div>
-    <div class="kpi p"><div class="val">27001</div><div class="lbl">Jouw troef</div></div>
-    <div class="kpi r"><div class="val">8 apr</div><div class="lbl">Eerste deadline</div></div>
+<!-- DASHBOARD PANE -->
+<div class="pane active" id="pane-dash">
+  <div class="kpi-strip">
+    <div class="kpi"><div class="v">10</div><div class="l">IT Tenders open</div></div>
+    <div class="kpi fire"><div class="v">4</div><div class="l">Deadline &lt; 2 weken</div></div>
+    <div class="kpi sun"><div class="v">€2,3B+</div><div class="l">Totale markt</div></div>
+    <div class="kpi"><div class="v">€929k</div><div class="l">Verwachte winst EV</div></div>
+    <div class="kpi sky"><div class="v">27001</div><div class="l">Jouw differentiator</div></div>
+    <div class="kpi fire"><div class="v">8 apr</div><div class="l">Eerste deadline</div></div>
   </div>
 
-  <div class="charts-row">
-    <div class="chart-card">
-      <h3>Verwachte Winst per Tender (€)</h3>
+  <div class="charts">
+    <div class="chart-box">
+      <h3>Verwachte Winst per Tender</h3>
       <div class="chart-wrap"><canvas id="evChart"></canvas></div>
     </div>
-    <div class="chart-card">
-      <h3>Risico vs Potentie (grootte = kans)</h3>
+    <div class="chart-box">
+      <h3>Risico vs Potentie</h3>
       <div class="chart-wrap"><canvas id="scatterChart"></canvas></div>
     </div>
-    <div class="chart-card">
-      <h3>Score vs Tijdsinvestering (uren)</h3>
+    <div class="chart-box">
+      <h3>Score vs Voorbereiding (uren)</h3>
       <div class="chart-wrap"><canvas id="timeChart"></canvas></div>
     </div>
   </div>
 
-  <div class="section-title">🟢 Tier 1 — Start hier vandaag</div>
-  <div class="tender-list" id="tier1-list"></div>
+  <div class="sec-head"><div class="tier-badge tb-1">🟢 Tier 1</div><span>Start hier — beste kans/risico verhouding</span></div>
+  <div class="tender-stack" id="t1-dash"></div>
 
-  <div class="section-title" style="margin-top:24px">🟡 Tier 2 — Met partner haalbaar</div>
-  <div class="tender-list" id="tier2-list"></div>
+  <div class="sec-head"><div class="tier-badge tb-2">🟡 Tier 2</div><span>Sterk potentieel — partner nodig</span></div>
+  <div class="tender-stack" id="t2-dash"></div>
 
-  <div class="section-title" style="margin-top:24px">🔴 Tier 3 — Middellang termijn</div>
-  <div class="tender-list" id="tier3-list"></div>
+  <div class="sec-head"><div class="tier-badge tb-3">🔴 Tier 3</div><span>Middellange termijn — trackrecord vereist</span></div>
+  <div class="tender-stack" id="t3-dash"></div>
 </div>
 
-<!-- IT TENDERS TAB -->
-<div class="tab-pane" id="tab-it">
-  <div class="kpi-row">
-    <div class="kpi"><div class="val">10</div><div class="lbl">Open tenders</div></div>
-    <div class="kpi r"><div class="val">4</div><div class="lbl">Deadline &lt; 2 weken</div></div>
-    <div class="kpi g"><div class="val">Gratis</div><div class="lbl">TenderNed account</div></div>
-    <div class="kpi o"><div class="val">27001</div><div class="lbl">Vereist in 7/10</div></div>
-    <div class="kpi"><div class="val">DAS</div><div class="lbl">Beste instap</div></div>
-    <div class="kpi p"><div class="val">TED</div><div class="lbl">EU tenders gratis</div></div>
+<!-- IT TENDERS PANE -->
+<div class="pane" id="pane-it">
+  <div class="alert-banner">
+    <div class="ab-icon">ℹ️</div>
+    <div><strong>TenderNed is gratis.</strong> Klik op de groene knop per tender om direct naar de officiële pagina te gaan. Gratis account aanmaken op tenderned.nl — geen abonnement nodig.</div>
   </div>
-  <div class="tender-list" id="all-tender-list"></div>
+  <div class="tender-stack" id="all-list"></div>
 </div>
 
-<!-- SECTOREN TAB -->
-<div class="tab-pane" id="tab-sectors">
-  <div class="highlight-box">
-    <h3>🎯 Buiten IT: waar jij kans maakt als beginner</h3>
-    <p>Je hebt 11 jaar medische after-sales ervaring en een ISO 27001 certificering. Dat opent meer deuren dan alleen IT. Hieronder de sectoren gerangd op jouw kans als beginner — inclusief directe zoeklinks naar gratis TenderNed aanbestedingen.</p>
+<!-- SECTOREN PANE -->
+<div class="pane" id="pane-sectors">
+  <div class="hosting-hero">
+    <h3>🎯 Buiten IT: waar jij als beginner écht kans maakt</h3>
+    <p>Jouw 11 jaar medische after-sales + ISO 27001 opent deuren ver buiten IT. Hieronder de sectoren gerangd op jouw profiel — plus directe zoeklinks naar TenderNed (gratis).</p>
   </div>
+  <div class="sector-grid" id="sec-grid"></div>
 
-  <div class="section-title">Top Sectoren voor Jouw Profiel</div>
-  <div class="sector-grid" id="sector-grid"></div>
+  <div class="sec-head"><div class="tier-badge tb-1">Gevonden Niet-IT Tenders</div></div>
+  <div id="nit-list"></div>
 
-  <div class="section-title" style="margin-top:24px">🔍 Directe TenderNed Zoeklinks (Gratis)</div>
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px" id="cpv-links"></div>
-
-  <div class="section-title" style="margin-top:24px" id="nonit-title" style="display:none">📋 Gevonden Niet-IT Tenders</div>
-  <div class="tender-list" id="nonit-list"></div>
+  <div class="sec-head" style="margin-top:28px"><div class="tier-badge tb-2">Direct Zoeken op TenderNed per Sector</div></div>
+  <div class="cpv-grid" id="cpv-grid"></div>
 </div>
 
-<!-- HOSTING TAB -->
-<div class="tab-pane" id="tab-hosting">
-  <div class="highlight-box">
-    <h3>🌐 GitHub Pages — Gratis, Permanent, Remote Toegankelijk</h3>
-    <p>Je hebt git al geïnstalleerd. Met een gratis GitHub account is dit dashboard binnen 5 minuten overal bereikbaar via een vaste URL zoals <code style="color:var(--accent)">https://[jouwNaam].github.io/aanbestedingen</code>. Geen abonnement, geen server nodig.</p>
+<!-- HOSTING PANE -->
+<div class="pane" id="pane-hosting">
+  <div class="hosting-hero">
+    <h3>🌐 Jouw dashboard live: https://haas10174.github.io/aanbestedingen/</h3>
+    <p>GitHub Pages is actief. Werkt overal — telefoon, tablet, werk, thuis. Gratis, permanent, geen server nodig.</p>
   </div>
-
-  <div class="hosting-steps">
+  <div class="step-list">
     <div class="step">
-      <div class="step-num">1</div>
+      <div class="step-n">✓</div>
       <div>
-        <h4>Maak een gratis GitHub account</h4>
-        <p>Ga naar <a href="https://github.com/signup" target="_blank">github.com/signup</a> en registreer met een e-mailadres. Volledig gratis.</p>
+        <h4>GitHub account aangemaakt ✅</h4>
+        <p>Account: <strong>haas10174</strong> — klaar.</p>
       </div>
     </div>
-
     <div class="step">
-      <div class="step-num">2</div>
+      <div class="step-n">✓</div>
       <div>
-        <h4>Maak een nieuw repository aan</h4>
-        <p>Na inloggen: klik op <strong>"New repository"</strong> → naam: <code>aanbestedingen</code> → Public → Create repository. Kopieer daarna de HTTPS clone URL.</p>
+        <h4>Repository aangemaakt & bestanden geüpload ✅</h4>
+        <p>Repo: <a href="https://github.com/haas10174/aanbestedingen" target="_blank">github.com/haas10174/aanbestedingen</a></p>
       </div>
     </div>
-
     <div class="step">
-      <div class="step-num">3</div>
+      <div class="step-n">✓</div>
       <div>
-        <h4>Configureer git en upload het dashboard</h4>
-        <p>Open een terminal (Win+R → cmd) en voer deze commando's één voor één in (vervang de gegevens door de jouwe):</p>
-        <div class="code-block">git config --global user.name "Jouw Naam"
-git config --global user.email "jouw@email.com"
-
-cd C:\Users\raoul\Desktop\aanbestedingen
-
-git init
+        <h4>GitHub Pages geactiveerd ✅</h4>
+        <p>Branch: main / root — live adres:</p>
+        <div class="code-blk">https://haas10174.github.io/aanbestedingen/</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-n">4</div>
+      <div>
+        <h4>Dashboard bijwerken (als je iets wilt aanpassen)</h4>
+        <p>Open terminal (Win+R → cmd) en plak dit om wijzigingen online te zetten:</p>
+        <div class="code-blk">cd C:\Users\raoul\Desktop\aanbestedingen
 git add .
-git commit -m "Aanbestedingen dashboard"
-git branch -M main
-git remote add origin https://github.com/JOUWNAAM/aanbestedingen.git
-git push -u origin main</div>
-        <button class="copy-btn" onclick="copyCode(this)">📋 Kopieer</button>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="step-num">4</div>
-      <div>
-        <h4>Activeer GitHub Pages</h4>
-        <p>In je GitHub repository: ga naar <strong>Settings → Pages → Source: Deploy from branch → Branch: main → / (root) → Save</strong>.</p>
-        <p style="margin-top:8px">Na ~1 minuut is je dashboard live op:</p>
-        <div class="code-block">https://JOUWNAAM.github.io/aanbestedingen/</div>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="step-num">5</div>
-      <div>
-        <h4>Dashboard bijwerken</h4>
-        <p>Elke keer dat je het dashboard aanpast, voer je dit uit om de wijzigingen online te zetten:</p>
-        <div class="code-block">cd C:\Users\raoul\Desktop\aanbestedingen
-git add .
-git commit -m "Dashboard update"
+git commit -m "Update"
 git push</div>
-        <button class="copy-btn" onclick="copyCode(this)">📋 Kopieer</button>
+        <button class="copy-b" onclick="copyCode(this)">📋 Kopieer</button>
       </div>
     </div>
-  </div>
-
-  <div style="margin-top:24px" class="highlight-box">
-    <h3>📱 Notities & Status worden lokaal opgeslagen</h3>
-    <p>De notities en statuswijzigingen die je in het dashboard maakt worden opgeslagen in je browser (localStorage). Ze zijn zichtbaar op de apparaten waar je ze invoert. Wil je notities synchroniseren tussen apparaten? Dan kun je het dashboard aanvullen met een gratis <a href="https://supabase.com" target="_blank">Supabase</a> database — vraag dit aan als je dat wilt.</p>
   </div>
 </div>
 
 <script>
-// ===================== DATA =====================
+// ============ DATA ============
 const tenders = [
-  {id:"T1",rank:1,tier:1,
-   title:"DAS Standaardprogrammatuur",
-   authority:"Ministerie van Defensie",
-   sector:"Defensie IT",sectorIcon:"🛡️",
-   tnId:"409219",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/409219",
-   tedUrl:"https://ted.europa.eu/en/search?scope=ACTIVE&query=defensie+standaardprogrammatuur",
+  {id:"T1",rank:1,tier:1,icon:"🛡️",
+   title:"DAS Standaardprogrammatuur",auth:"Ministerie van Defensie",sector:"Defensie IT",
+   tnId:"409219",tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/409219",
+   tedUrl:"https://ted.europa.eu/en/search?scope=ACTIVE&query=defensie+standaardprogrammatuur+2026",
    value:"€1,3 miljard (DAS-pool)",valueNum:1300000000,
-   deadline:"Doorlopend t/m dec 2027",deadlineClass:"ongoing",
-   winProb:35,margin:25,avgOrder:250000,ev:87500,
-   timeH:20,risk:1,pot:5,kans:3,score:13,
-   why:"DAS = laagste drempel. Één toelating → onbeperkt reageren op mini-tenders. After-sales + helpdesk scope past perfect.",
+   deadline:"Doorlopend t/m dec 2027",dlClass:"dl-ongoing",
+   winProb:35,ev:87500,timeH:20,risk:1,pot:5,kans:3,score:13,
+   why:"<strong>DAS = laagste drempel in aanbestedingsland.</strong> Eén toelatingsdossier indienen → daarna reageren op ~550 mini-tenders per jaar. Helpdesk/after-sales scope past perfect bij jouw 11 jaar ervaring.",
    docs:[
-     {name:"DAS Aankondiging",sub:"Officiële TenderNed publicatie",status:"login",url:"https://www.tenderned.nl/aankondigingen/overzicht/409219"},
-     {name:"TED Europa",sub:"EU publicatie (gratis, geen login)",status:"free",url:"https://ted.europa.eu/en/search?scope=ACTIVE&query=defensie+standaardprogrammatuur+2026"},
-     {name:"DAS Spelregels document",sub:"Na gratis TenderNed login",status:"login",url:"https://www.tenderned.nl/aankondigingen/overzicht/409219"},
+     {name:"DAS Aankondiging TenderNed",sub:"ID 409219",free:false,url:"https://www.tenderned.nl/aankondigingen/overzicht/409219"},
+     {name:"TED Europa publicatie",sub:"EU niveau — geen login vereist",free:true,url:"https://ted.europa.eu/en/search?scope=ACTIVE&query=defensie+standaardprogrammatuur+2026"},
    ],
-   infos:[
-     {k:"Publicatiedatum",v:"23 jan 2026"},
-     {k:"Looptijd DAS",v:"t/m 31 dec 2027"},
-     {k:"Waarde totaal",v:"~€1,3 miljard"},
-     {k:"Orders per jaar",v:"~550 mini-tenders"},
-     {k:"Procedure",v:"DAS (Dynamisch Aankoopsysteem)"},
-     {k:"Toelating",v:"Eén keer aanvragen, daarna direct reageren"},
-   ]
+   infos:[{k:"Gepubliceerd",v:"23 jan 2026"},{k:"Looptijd DAS",v:"t/m 31 dec 2027"},{k:"Orders/jaar",v:"~550 mini-tenders"},{k:"Procedure",v:"DAS"},{k:"Jouw instap",v:"Toelating aanvragen"}]
   },
-  {id:"T2",rank:2,tier:1,
-   title:"Digitaal diagnose-instrument",
-   authority:"WerkBedrijf Rijk van Nijmegen",
-   sector:"Health-adjacent IT",sectorIcon:"🏥",
-   tnId:"413309",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/413309",
+  {id:"T2",rank:2,tier:1,icon:"🏥",
+   title:"Digitaal diagnose-instrument",auth:"WerkBedrijf Rijk van Nijmegen",sector:"Health-adjacent IT",
+   tnId:"413309",tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/413309",
    tedUrl:"https://ted.europa.eu/en/search?scope=ACTIVE&query=diagnose+instrument+nijmegen",
    value:"~€50.000/jaar",valueNum:50000,
-   deadline:"8 april 2026",deadlineClass:"urgent",
-   winProb:40,margin:30,avgOrder:50000,ev:6000,
-   timeH:15,risk:1,pot:2,kans:4,score:11,
-   why:"Klein, medische sector, helpdesk-eis, laagste omvang. Ideaal als eerste inschrijving om het proces te leren.",
+   deadline:"8 april 2026 ⚠️",dlClass:"dl-urgent",
+   winProb:40,ev:6000,timeH:15,risk:1,pot:2,kans:4,score:11,
+   why:"<strong>Ideale eerste inschrijving om het proces te leren.</strong> Klein contract, medische sector, helpdesk-vereiste. Zorg dat je er vóór 8 april bij bent.",
    docs:[
-     {name:"Aankondiging TenderNed",sub:"Gratis publicatiepagina",status:"login",url:"https://www.tenderned.nl/aankondigingen/overzicht/413309"},
-     {name:"Vooraankondiging",sub:"Marktconsultatie TenderNed",status:"login",url:"https://www.tenderned.nl/aankondigingen/overzicht/405560"},
+     {name:"Aankondiging TenderNed",sub:"ID 413309",free:false,url:"https://www.tenderned.nl/aankondigingen/overzicht/413309"},
+     {name:"Vooraankondiging",sub:"TenderNed ID 405560",free:false,url:"https://www.tenderned.nl/aankondigingen/overzicht/405560"},
    ],
-   infos:[
-     {k:"Publicatiedatum",v:"25 feb 2026"},
-     {k:"Deadline",v:"8 april 2026 ⚠️"},
-     {k:"Startdatum contract",v:"1 juni 2026"},
-     {k:"Looptijd",v:"2 jaar + 2×1 jaar opties"},
-     {k:"Volume",v:"~450 intakes/jaar"},
-     {k:"Procedure",v:"Europees openbaar"},
-   ]
+   infos:[{k:"Deadline",v:"8 april 2026 ⚠️"},{k:"Contractstart",v:"1 juni 2026"},{k:"Looptijd",v:"2 jaar + 2×1 jaar"},{k:"Volume",v:"~450 intakes/jaar"},{k:"Procedure",v:"Europees openbaar"}]
   },
-  {id:"T3",rank:3,tier:1,
-   title:"Basis ICT/IV Voorzieningen MSP + MSSP",
-   authority:"GGD GHOR Nederland",
-   sector:"Managed Security / Health IT",sectorIcon:"🔒",
-   tnId:"411356",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/411356",
-   tedUrl:"https://ted.europa.eu/en/search?scope=ACTIVE&query=GGD+GHOR+MSP+MSSP",
+  {id:"T3",rank:3,tier:1,icon:"🔒",
+   title:"Basis ICT/IV MSP + MSSP",auth:"GGD GHOR Nederland",sector:"Managed Security / Health IT",
+   tnId:"411356",tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/411356",
+   tedUrl:"https://ted.europa.eu/en/search?scope=ACTIVE&query=GGD+GHOR+MSP+MSSP+2026",
    value:"€2,2 – €2,7 miljoen",valueNum:2400000,
-   deadline:"10 april 2026",deadlineClass:"urgent",
-   winProb:15,margin:20,avgOrder:2400000,ev:72000,
-   timeH:80,risk:2,pot:3,kans:3,score:10,
-   why:"Perfecte profielfit: medisch + MSSP + ISO 27001 vereist. Tijdkritisch — vandaag nog actie, IT-partner essentieel.",
+   deadline:"10 april 2026 ⚠️",dlClass:"dl-urgent",
+   winProb:15,ev:72000,timeH:80,risk:2,pot:3,kans:3,score:10,
+   why:"<strong>Perfecte profielfit:</strong> medisch + MSSP + ISO 27001 vereist. Tijdkritisch — vandaag nog IT-partner vinden.",
    docs:[
-     {name:"Aankondiging TenderNed",sub:"ID 411356 — gratis pagina",status:"login",url:"https://www.tenderned.nl/aankondigingen/overzicht/411356"},
-     {name:"Vooraankondiging",sub:"Marktconsultatie TenderNed",status:"login",url:"https://www.tenderned.nl/aankondigingen/overzicht/390966"},
+     {name:"Aankondiging TenderNed",sub:"ID 411356",free:false,url:"https://www.tenderned.nl/aankondigingen/overzicht/411356"},
+     {name:"Vooraankondiging",sub:"TenderNed ID 390966",free:false,url:"https://www.tenderned.nl/aankondigingen/overzicht/390966"},
    ],
-   infos:[
-     {k:"Publicatiedatum",v:"8 feb 2026"},
-     {k:"Deadline",v:"10 april 2026 ⚠️"},
-     {k:"Startdatum contract",v:"1 juli 2026"},
-     {k:"Waarde MSP",v:"€1,38 – €1,65M (4 jr)"},
-     {k:"Waarde MSSP",v:"€345k – €580k"},
-     {k:"Procedure",v:"Niet-openbaar Europees"},
-   ]
+   infos:[{k:"Deadline",v:"10 april 2026 ⚠️"},{k:"Contractstart",v:"1 juli 2026"},{k:"Waarde MSP",v:"€1,38–€1,65M"},{k:"Waarde MSSP",v:"€345k–€580k"},{k:"Procedure",v:"Niet-openbaar Europees"}]
   },
-  {id:"T4",rank:4,tier:2,
-   title:"Beschikbaarheidssysteem",
-   authority:"Veiligheidsregio Hollands Midden",
-   sector:"Public Safety Tech",sectorIcon:"🚒",
-   tnId:"415785",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/415785",
-   tedUrl:"https://ted.europa.eu/en/search?scope=ACTIVE&query=veiligheidsregio+hollands+midden+beschikbaarheidssysteem",
-   value:"~€1 miljoen (TCO-schatting)",valueNum:1000000,
-   deadline:"14 mei 2026",deadlineClass:"soon",
-   winProb:20,margin:25,avgOrder:1000000,ev:50000,
-   timeH:60,risk:2,pot:3,kans:3,score:9,
-   why:"Publieke veiligheid + after-sales fit. Meer voorbereidingstijd. SaaS + 1.250 smart pagers + SIM kaarten.",
+  {id:"T4",rank:4,tier:2,icon:"🚒",
+   title:"Beschikbaarheidssysteem",auth:"Veiligheidsregio Hollands Midden",sector:"Public Safety Tech",
+   tnId:"415785",tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/415785",
+   tedUrl:"https://ted.europa.eu/en/search?scope=ACTIVE&query=veiligheidsregio+hollands+midden+2026",
+   value:"~€1 miljoen (TCO)",valueNum:1000000,
+   deadline:"14 mei 2026",dlClass:"dl-soon",
+   winProb:20,ev:50000,timeH:60,risk:2,pot:3,kans:3,score:9,
+   why:"SaaS + 1.250 smart pagers + SIM-kaarten voor hulpdiensten. After-sales scope sluit aan bij jouw achtergrond. Meer tijd om voor te bereiden dan de urgente tenders.",
    docs:[
-     {name:"Aankondiging TenderNed",sub:"ID 415785",status:"login",url:"https://www.tenderned.nl/aankondigingen/overzicht/415785"},
-     {name:"TED Europa zoeklink",sub:"EU publicatie (gratis)",status:"free",url:"https://ted.europa.eu/en/search?scope=ACTIVE&query=veiligheidsregio+hollands+midden+2026"},
+     {name:"Aankondiging TenderNed",sub:"ID 415785",free:false,url:"https://www.tenderned.nl/aankondigingen/overzicht/415785"},
+     {name:"TED Europa",sub:"Gratis — geen login",free:true,url:"https://ted.europa.eu/en/search?scope=ACTIVE&query=veiligheidsregio+hollands+midden+2026"},
    ],
-   infos:[
-     {k:"Publicatiedatum",v:"15 mrt 2026"},
-     {k:"Deadline",v:"14 mei 2026"},
-     {k:"Contractstart",v:"1 juli 2026"},
-     {k:"Looptijd",v:"4 jaar + max 6×1 jaar"},
-     {k:"Scope",v:"SaaS + 1.250 pagers + SIM + 4G/5G"},
-     {k:"Procedure",v:"Europees openbaar"},
-   ]
+   infos:[{k:"Deadline",v:"14 mei 2026"},{k:"Contractstart",v:"1 juli 2026"},{k:"Looptijd",v:"4 jaar + max 6×1 jaar"},{k:"Scope",v:"SaaS + pagers + 4G/5G"},{k:"Procedure",v:"Europees openbaar"}]
   },
-  {id:"T5",rank:5,tier:2,
-   title:"Uitbesteding ICT-infrastructuur beheer",
-   authority:"Gemeente Meerssen",
-   sector:"Managed IT / Gemeente",sectorIcon:"🏛️",
-   tnId:"416157",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/416157",
+  {id:"T5",rank:5,tier:2,icon:"🏛️",
+   title:"Uitbesteding ICT-infrastructuur",auth:"Gemeente Meerssen",sector:"Managed IT / Gemeente",
+   tnId:"416157",tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/416157",
    tedUrl:"https://aanbestedingskalender.nl/projecten/2732831",
    value:"€7 miljoen",valueNum:7000000,
-   deadline:"14 april 2026",deadlineClass:"urgent",
-   winProb:10,margin:20,avgOrder:7000000,ev:140000,
-   timeH:100,risk:3,pot:4,kans:2,score:9,
-   why:"SIEM/SOC element, kleinere gemeente = minder concurrentie dan grote steden. Partner essentieel voor technische uitvoering.",
+   deadline:"14 april 2026 ⚠️",dlClass:"dl-urgent",
+   winProb:10,ev:140000,timeH:100,risk:3,pot:4,kans:2,score:9,
+   why:"SIEM/SOC element, kleinere gemeente = minder concurrentie. Haalbaar met een IT-uitvoeringspartner — jij levert 27001-expertise en contractbeheer.",
    docs:[
-     {name:"Aankondiging TenderNed",sub:"ID 416157",status:"login",url:"https://www.tenderned.nl/aankondigingen/overzicht/416157"},
-     {name:"Aanbestedingskalender",sub:"Gratis projectpagina",status:"free",url:"https://aanbestedingskalender.nl/projecten/2732831"},
+     {name:"Aankondiging TenderNed",sub:"ID 416157",free:false,url:"https://www.tenderned.nl/aankondigingen/overzicht/416157"},
+     {name:"Aanbestedingskalender",sub:"Gratis projectpagina",free:true,url:"https://aanbestedingskalender.nl/projecten/2732831"},
    ],
-   infos:[
-     {k:"Publicatiedatum",v:"13 feb 2026"},
-     {k:"Deadline",v:"14 april 2026 ⚠️"},
-     {k:"Scope",v:"~255 werkplekken + SIEM/SOC"},
-     {k:"Waarde",v:"~€7 miljoen totaal"},
-     {k:"Procedure",v:"Europees openbaar"},
-   ]
+   infos:[{k:"Deadline",v:"14 april 2026 ⚠️"},{k:"Scope",v:"~255 werkplekken + SIEM"},{k:"Waarde",v:"~€7 miljoen"},{k:"Procedure",v:"Europees openbaar"}]
   },
-  {id:"T6",rank:6,tier:2,
-   title:"Security Operations Center 2026",
-   authority:"Vitens N.V.",
-   sector:"SOC / Cybersecurity",sectorIcon:"🔐",
-   tnId:"418048",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/418048",
-   tedUrl:"https://ted.europa.eu/en/search?scope=ACTIVE&query=vitens+security+operations+center+2026",
+  {id:"T6",rank:6,tier:2,icon:"🔐",
+   title:"Security Operations Center 2026",auth:"Vitens N.V.",sector:"SOC / Cybersecurity",
+   tnId:"418048",tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/418048",
+   tedUrl:"https://ted.europa.eu/en/search?scope=ACTIVE&query=vitens+security+operations+2026",
    value:"€13,5 miljoen",valueNum:13500000,
-   deadline:"14 april 2026",deadlineClass:"urgent",
-   winProb:5,margin:20,avgOrder:13500000,ev:135000,
-   timeH:120,risk:4,pot:5,kans:2,score:9,
-   why:"Kritieke drinkwaterinfrastructuur. ISO 27001 + OT/SCADA security. Groot IT-team vereist maar sterk consortiumrol als 27001-auditor.",
+   deadline:"14 april 2026 ⚠️",dlClass:"dl-urgent",
+   winProb:5,ev:135000,timeH:120,risk:4,pot:5,kans:2,score:9,
+   why:"Kritieke drinkwaterinfrastructuur. ISO 27001 + OT/SCADA. Groot team vereist maar jij kunt als 27001-auditor waarde toevoegen in een consortium.",
    docs:[
-     {name:"Aankondiging TenderNed",sub:"ID 418048",status:"login",url:"https://www.tenderned.nl/aankondigingen/overzicht/418048"},
-     {name:"Vorige SOC tender 2023",sub:"Referentie TenderNed ID 296435",status:"free",url:"https://www.tenderned.nl/aankondigingen/overzicht/296435"},
+     {name:"Aankondiging TenderNed",sub:"ID 418048",free:false,url:"https://www.tenderned.nl/aankondigingen/overzicht/418048"},
+     {name:"Vorige SOC 2023 (referentie)",sub:"TenderNed ID 296435",free:false,url:"https://www.tenderned.nl/aankondigingen/overzicht/296435"},
    ],
-   infos:[
-     {k:"Publicatiedatum",v:"1 april 2026"},
-     {k:"Deadline",v:"14 april 2026 ⚠️"},
-     {k:"Waarde",v:"€550k–€900k/jaar"},
-     {k:"Looptijd",v:"3 jaar + opties tot aug 2041"},
-     {k:"Procedure",v:"Niet-openbaar Europees"},
-   ]
+   infos:[{k:"Deadline",v:"14 april 2026 ⚠️"},{k:"Waarde/jaar",v:"€550k–€900k"},{k:"Looptijd",v:"3 jaar + opties"},{k:"Procedure",v:"Niet-openbaar Europees"}]
   },
-  {id:"T7",rank:7,tier:3,
-   title:"Digitale Voorziening Toezicht en Handhaving",
-   authority:"Gemeente Amsterdam",
-   sector:"Gov SaaS",sectorIcon:"🏙️",
-   tnId:"415262",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/415262",
-   tedUrl:"https://ted.europa.eu/en/search?scope=ACTIVE&query=amsterdam+toezicht+handhaving+digitale+voorziening+2026",
+  {id:"T7",rank:7,tier:3,icon:"🏙️",
+   title:"Digitale Voorziening T&H",auth:"Gemeente Amsterdam",sector:"Gov SaaS",
+   tnId:"415262",tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/415262",
+   tedUrl:"https://ted.europa.eu/en/search?scope=ACTIVE&query=amsterdam+toezicht+handhaving+2026",
    value:"€9,5 – €12,5 miljoen",valueNum:11000000,
-   deadline:"19 mei 2026",deadlineClass:"soon",
-   winProb:5,margin:20,avgOrder:11000000,ev:110000,
-   timeH:150,risk:4,pot:4,kans:2,score:8,
-   why:"Grote gemeente, track record nodig. ISO 27001 verplicht. ~850 gebruikers, >500k meldingen/jaar.",
+   deadline:"19 mei 2026",dlClass:"dl-soon",
+   winProb:5,ev:110000,timeH:150,risk:4,pot:4,kans:2,score:8,
+   why:"Grote gemeente, track record nodig. ISO 27001 verplicht. ~850 gebruikers. Doel voor over 1–2 jaar met bewezen referenties.",
    docs:[
-     {name:"Aankondiging TenderNed",sub:"ID 415262",status:"login",url:"https://www.tenderned.nl/aankondigingen/overzicht/415262"},
-     {name:"TED Europa",sub:"EU publicatie (gratis)",status:"free",url:"https://ted.europa.eu/en/search?scope=ACTIVE&query=gemeente+amsterdam+toezicht+handhaving+2026"},
+     {name:"Aankondiging TenderNed",sub:"ID 415262",free:false,url:"https://www.tenderned.nl/aankondigingen/overzicht/415262"},
+     {name:"TED Europa",sub:"Gratis — geen login",free:true,url:"https://ted.europa.eu/en/search?scope=ACTIVE&query=amsterdam+toezicht+handhaving+2026"},
    ],
-   infos:[
-     {k:"Publicatiedatum",v:"11 mrt 2026"},
-     {k:"Deadline",v:"19 mei 2026"},
-     {k:"Waarde",v:"€9,46M – €12,5M"},
-     {k:"Looptijd",v:"4 jaar + 3×2 jaar (max 10 jr)"},
-     {k:"Gebruikers",v:"~850 (500 mobiel)"},
-     {k:"Procedure",v:"Europees openbaar"},
-   ]
+   infos:[{k:"Deadline",v:"19 mei 2026"},{k:"Waarde",v:"€9,46M–€12,5M"},{k:"Looptijd",v:"max 10 jaar"},{k:"Procedure",v:"Europees openbaar"}]
   },
-  {id:"T8",rank:8,tier:3,
-   title:"IT Consultancy",
-   authority:"N.V. Nederlandse Gasunie",
-   sector:"Strategisch ICT Advies",sectorIcon:"⚡",
-   tnId:"414093",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/414093",
-   tedUrl:"https://ted.europa.eu/en/search?scope=ACTIVE&query=gasunie+IT+consultancy+2026",
+  {id:"T8",rank:8,tier:3,icon:"⚡",
+   title:"IT Consultancy Gasunie",auth:"N.V. Nederlandse Gasunie",sector:"Strategisch ICT Advies",
+   tnId:"414093",tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/414093",
+   tedUrl:"https://www.gasunie.nl/en/suppliers/working-with-ariba",
    value:"€14 miljoen",valueNum:14000000,
-   deadline:"24 april 2026",deadlineClass:"soon",
-   winProb:3,margin:25,avgOrder:14000000,ev:105000,
-   timeH:120,risk:4,pot:5,kans:1,score:8,
-   why:"Kritieke energie-infra. Max 3 leveranciers door. Groningen-locatie. Sterke referenties vereist. Toekomstig doel.",
+   deadline:"24 april 2026",dlClass:"dl-soon",
+   winProb:3,ev:105000,timeH:120,risk:4,pot:5,kans:1,score:8,
+   why:"Kritieke energie-infrastructuur. Max 3 leveranciers. Sterke referenties vereist. Toekomstig doel als je trackrecord hebt.",
    docs:[
-     {name:"Aankondiging TenderNed",sub:"ID 414093",status:"login",url:"https://www.tenderned.nl/aankondigingen/overzicht/414093"},
-     {name:"SAP Ariba leveranciersportaal",sub:"Gasunie documenten (gratis registratie)",status:"free",url:"https://www.gasunie.nl/en/suppliers/working-with-ariba"},
+     {name:"Aankondiging TenderNed",sub:"ID 414093",free:false,url:"https://www.tenderned.nl/aankondigingen/overzicht/414093"},
+     {name:"SAP Ariba (Gasunie portaal)",sub:"Gratis leveranciersregistratie",free:true,url:"https://www.gasunie.nl/en/suppliers/working-with-ariba"},
    ],
-   infos:[
-     {k:"Publicatiedatum",v:"3 mrt 2026"},
-     {k:"Deadline",v:"24 april 2026"},
-     {k:"Waarde",v:"€14M excl. BTW"},
-     {k:"Looptijd",v:"4 jaar + 2×2 jaar"},
-     {k:"Max aanbieders",v:"3 partijen"},
-     {k:"Locatie",v:"Groningen"},
-   ]
+   infos:[{k:"Deadline",v:"24 april 2026"},{k:"Waarde",v:"€14M excl. BTW"},{k:"Max partijen",v:"3"},{k:"Locatie",v:"Groningen"}]
   },
-  {id:"T9",rank:9,tier:3,
-   title:"Inhuur ICT Professionals",
-   authority:"Min. Defensie (via EZK)",
-   sector:"Defensie IT Staffing",sectorIcon:"🎖️",
-   tnId:"387923",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/387923",
-   tedUrl:"https://ted.europa.eu/en/search?scope=ACTIVE&query=defensie+inhuur+ICT+professionals+401894-2025",
+  {id:"T9",rank:9,tier:3,icon:"🎖️",
+   title:"Inhuur ICT Professionals Defensie",auth:"Min. Defensie / EZK",sector:"Defensie IT Staffing",
+   tnId:"387923",tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/387923",
+   tedUrl:"https://ted.europa.eu/en/notice/401894-2025",
    value:"€1 – €1,5 miljard",valueNum:1250000000,
-   deadline:"Framework lopend (mini-comp)",deadlineClass:"ongoing",
-   winProb:10,margin:15,avgOrder:150000,ev:22500,
-   timeH:40,risk:3,pot:5,kans:1,score:8,
-   why:"Framework al gesloten (sept 2025). Toegang via sub-aannemerschap bij één van de 6 geselecteerde partijen.",
+   deadline:"Framework lopend (mini-comp)",dlClass:"dl-ongoing",
+   winProb:10,ev:22500,timeH:40,risk:3,pot:5,kans:1,score:8,
+   why:"Framework gesloten sept 2025. Toegang nu via sub-aannemerschap bij één van de 6 geselecteerde partijen.",
    docs:[
-     {name:"Aankondiging TenderNed",sub:"ID 387923 (gesloten framework)",status:"login",url:"https://www.tenderned.nl/aankondigingen/overzicht/387923"},
-     {name:"TED Europa publicatie",sub:"401894-2025 (gratis)",status:"free",url:"https://ted.europa.eu/en/notice/401894-2025"},
+     {name:"Framework TenderNed",sub:"ID 387923",free:false,url:"https://www.tenderned.nl/aankondigingen/overzicht/387923"},
+     {name:"TED Europa 401894-2025",sub:"Gratis — geen login",free:true,url:"https://ted.europa.eu/en/notice/401894-2025"},
    ],
-   infos:[
-     {k:"Publicatiedatum",v:"20 jun 2025"},
-     {k:"Status",v:"Gesloten — framework loopt"},
-     {k:"Contractstart",v:"1 jan 2026"},
-     {k:"Waarde",v:"Max €1,5 miljard"},
-     {k:"Aanpak",v:"Sub-aannemer bij framework-partij"},
-   ]
+   infos:[{k:"Status",v:"Framework loopt"},{k:"Contractstart",v:"1 jan 2026"},{k:"Aanpak",v:"Sub-aannemer"}]
   },
-  {id:"T10",rank:10,tier:3,
-   title:"Primair Processysteem RvdK",
-   authority:"Raad voor de Kinderbescherming",
-   sector:"Gov IT / NIS2 / GDPR",sectorIcon:"⚖️",
-   tnId:"414132",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/414132",
+  {id:"T10",rank:10,tier:3,icon:"⚖️",
+   title:"Primair Processysteem RvdK",auth:"Raad voor de Kinderbescherming",sector:"Gov IT / NIS2 / GDPR",
+   tnId:"414132",tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/414132",
    tedUrl:"https://ted.europa.eu/en/search?scope=ACTIVE&query=raad+kinderbescherming+processysteem+2026",
    value:"€112M – €200M",valueNum:156000000,
-   deadline:"28 april 2026",deadlineClass:"soon",
-   winProb:1,margin:20,avgOrder:156000000,ev:312000,
-   timeH:300,risk:5,pot:5,kans:1,score:7,
-   why:"NIS2/BIO/ISO 27001 kern-eis. Competitieve dialoog. 11 jaar contract. Niet solo — als compliance-specialist in consortium.",
+   deadline:"28 april 2026",dlClass:"dl-soon",
+   winProb:1,ev:312000,timeH:300,risk:5,pot:5,kans:1,score:7,
+   why:"NIS2/BIO/ISO 27001 kern-vereiste. Competitieve dialoog, max 5 partijen. Grote kans als compliance-specialist in consortium — niet solo.",
    docs:[
-     {name:"Aankondiging TenderNed",sub:"ID 414132",status:"login",url:"https://www.tenderned.nl/aankondigingen/overzicht/414132"},
-     {name:"Vooraankondiging",sub:"TenderNed ID 410788",status:"login",url:"https://www.tenderned.nl/aankondigingen/overzicht/410788"},
-     {name:"EU-Supply platform",sub:"Gratis leveranciersregistratie",status:"free",url:"https://eu-supply.com"},
-     {name:"TED Europa",sub:"EU publicatie (gratis)",status:"free",url:"https://ted.europa.eu/en/search?scope=ACTIVE&query=raad+kinderbescherming+2026"},
+     {name:"Aankondiging TenderNed",sub:"ID 414132",free:false,url:"https://www.tenderned.nl/aankondigingen/overzicht/414132"},
+     {name:"Vooraankondiging",sub:"TenderNed ID 410788",free:false,url:"https://www.tenderned.nl/aankondigingen/overzicht/410788"},
+     {name:"TED Europa",sub:"Gratis — geen login",free:true,url:"https://ted.europa.eu/en/search?scope=ACTIVE&query=raad+kinderbescherming+2026"},
    ],
-   infos:[
-     {k:"Publicatiedatum",v:"3 mrt 2026"},
-     {k:"Deadline",v:"28 april 2026"},
-     {k:"Waarde",v:"€112M–€200M incl. BTW"},
-     {k:"Looptijd",v:"11 jaar (apr 2027)"},
-     {k:"Procedure",v:"Competitieve dialoog"},
-     {k:"Max kandidaten",v:"5 partijen"},
-   ]
+   infos:[{k:"Deadline",v:"28 april 2026"},{k:"Waarde",v:"€112M–€200M"},{k:"Looptijd",v:"11 jaar"},{k:"Procedure",v:"Competitieve dialoog"}]
   },
+];
+
+const nonITTenders = [
+  {icon:"🔧",best:true,
+   title:"Onderhoud Medische Apparatuur Eerstelijns",
+   auth:"Regionale zorgcoöperatie (eerstelijns)",sector:"Medische After-Sales",
+   deadline:"⚠️ Controleer direct — TN 326643",
+   value:"~€170.000/jaar",
+   diff:2,
+   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/326643",
+   why:"⭐ BESTE MATCH voor jouw profiel. Servicecontract voor medische apparatuur in huisartsenpraktijken. Jouw 11 jaar medische after-sales is exact wat ze zoeken. ISO 27001 dekt datavereisten. Realistisch solo te winnen."},
+  {icon:"📺",best:true,
+   title:"Schoonmaakdienstverlening RTV Utrecht",
+   auth:"RTV Utrecht",sector:"Facilitair / Schoonmaak",
+   deadline:"April–mei 2026 — TN 413089",
+   value:"Klein (1 locatie)",
+   diff:1,
+   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/413089",
+   why:"🏆 LAAGSTE DREMPEL — ideaal eerste tender om het inschrijfproces te leren. Eén locatie, nationale procedure, kleine scope. Partner met een schoonmaakbedrijf — jij regelt contract en kwaliteitsbewaking."},
+  {icon:"🏫",best:false,
+   title:"Schoonmaakonderhoud Archipel Scholen",
+   auth:"Archipel Scholen ('t Gooi)",sector:"Facilitair / Schoonmaak",
+   deadline:"~27 mei 2026 — TN 417000",
+   value:"€3.578.000 (3 jaar)",
+   diff:2,
+   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/417000",
+   why:"15 schoollocaties, heldere scope. Haalbaar als hoofdaannemer met schoonmaak-onderaannemer. AI-voordeel: automatische KPI-dashboards en kostenoptimalisatie in je offerte zorgen voor een sterk BPKV-plan."},
+  {icon:"🏥",best:false,
+   title:"Schoonmaak Stichting Aurelia (Zorglocaties)",
+   auth:"Stichting Aurelia",sector:"Zorg Facilitair",
+   deadline:"April–mei 2026 — TN 405374",
+   value:"€22.420.000 (8 jaar)",
+   diff:3,
+   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/405374",
+   why:"Zorginstelling = hygiëneprotocollen en medische omgeving. Jouw medische achtergrond is hier een echte differentiator t.o.v. gewone schoonmaakbedrijven. Grotere omvang — partner nodig voor uitvoering."},
+  {icon:"🎓",best:false,
+   title:"Schoonmaak Segbroek College Den Haag",
+   auth:"Stichting VO Haaglanden",sector:"Facilitair / Schoonmaak",
+   deadline:"~13 mei 2026",
+   value:"Klein (7.610 m²)",
+   diff:2,
+   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=segbroek+college+schoonmaak",
+   why:"Kleine school in Den Haag, nationale procedure, 2 locaties. Goed als tweede oefentender na RTV Utrecht."},
+  {icon:"🔒",best:false,
+   title:"Beveiliging & Receptie Dienstverlening",
+   auth:"Nationale overheidsinstantie",sector:"Beveiliging / Receptie",
+   deadline:"Controleer direct — TN 403065",
+   value:"N.b.",
+   diff:3,
+   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/403065",
+   why:"Combinatie beveiliging + receptiediensten. Jouw klantenservice-achtergrond is sterk relevant voor het receptiegedeelte. Vraag om percelen — het receptiedeel kan soms apart worden aangeboden."},
 ];
 
 const sectors = [
-  {icon:"🏥",title:"Medische After-Sales Service",fit:"Uitstekend",fitClass:"fit-high",
-   desc:"Servicecontracten voor medische apparatuur, onderhoud, calibratie, helpdesk voor zorginstellingen. Jouw exacte 11 jaar ervaring is hier goud waard.",
-   cpv:"50420000,85100000,33100000",
-   tnSearch:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=medische+apparatuur+service",
-   tedSearch:"https://ted.europa.eu/en/search?scope=ACTIVE&query=medical+equipment+service+netherlands"},
-  {icon:"📋",title:"ISO/Compliance Auditing",fit:"Uitstekend",fitClass:"fit-high",
-   desc:"Overheidsinstanties besteden ISO 27001, BIO, NIS2 audits en gap-analyses uit. Jouw certificering is exact wat ze zoeken — solo of als ZZP.",
-   cpv:"79212000,73200000",
-   tnSearch:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=iso+27001+audit",
-   tedSearch:"https://ted.europa.eu/en/search?scope=ACTIVE&query=ISO+27001+audit+netherlands"},
-  {icon:"🎓",title:"Training & Opleiding",fit:"Goed",fitClass:"fit-high",
-   desc:"Trainingen ISO 27001 awareness, informatiebeveiliging, klantenservice. Lagere drempel, kleine contractwaarden — ideaal als eerste win.",
-   cpv:"80510000,80521000",
-   tnSearch:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=informatiebeveiligingstraining",
-   tedSearch:"https://ted.europa.eu/en/search?scope=ACTIVE&query=training+informatiebeveiliging+nederland"},
-  {icon:"🏗️",title:"Bouw — Projectbeheer",fit:"Mogelijk",fitClass:"fit-mid",
-   desc:"Als projectmanager/coördinator zonder uitvoerend team. Bouwadvies, directievoering, toezicht. Combineer met ISO 27001 voor smart building opdrachten.",
-   cpv:"45000000,71000000",
-   tnSearch:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=projectmanagement+bouw",
-   tedSearch:"https://ted.europa.eu/en/search?scope=ACTIVE&query=construction+project+management+netherlands"},
-  {icon:"🔒",title:"Fysieke Beveiliging",fit:"Mogelijk",fitClass:"fit-mid",
-   desc:"Beveiligingsdiensten voor overheidspanden. Lage technische drempel. Startkapitaal + personeel nodig. Gecombineerd met IT-security kansen.",
-   cpv:"79710000,79711000",
-   tnSearch:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=beveiligingsdiensten",
-   tedSearch:"https://ted.europa.eu/en/search?scope=ACTIVE&query=security+services+netherlands"},
-  {icon:"🧹",title:"Facilitaire Diensten",fit:"Laagste drempel",fitClass:"fit-mid",
-   desc:"Schoonmaak, catering, facilitair beheer. Veel lokale opdrachten, lage kennisdrempel. Hoge concurrentie maar goed als eerste referentieproject.",
-   cpv:"90910000,55510000,79993000",
-   tnSearch:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=schoonmaak+facilitair",
-   tedSearch:"https://ted.europa.eu/en/search?scope=ACTIVE&query=cleaning+services+netherlands"},
-  {icon:"🚐",title:"Vervoer & Logistiek",fit:"Instap",fitClass:"fit-low",
-   desc:"Doelgroepenvervoer, leerlingenvervoer, zorgvervoer. Kleine gemeentelijke contracten. Voertuigen + chauffeurs nodig maar lage kennisdrempel.",
-   cpv:"60000000,60130000",
-   tnSearch:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=leerlingenvervoer+zorgvervoer",
-   tedSearch:"https://ted.europa.eu/en/search?scope=ACTIVE&query=vervoer+gemeente+netherlands"},
-  {icon:"📣",title:"Communicatie & PR",fit:"Instap",fitClass:"fit-low",
-   desc:"Overheidscommunicatie, campagnes, drukwerk. Kleine contracten, creatieve vrijheid. AI-voordeel hier enorm voor content productie.",
-   cpv:"79340000,79341000",
-   tnSearch:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=communicatie+campagne",
-   tedSearch:"https://ted.europa.eu/en/search?scope=ACTIVE&query=communication+campaign+netherlands"},
-  {icon:"♻️",title:"Duurzaamheid & Milieu",fit:"Groeiend",fitClass:"fit-low",
-   desc:"Energieadvies, verduurzaming gebouwen, klimaatplannen. Groeiende sector met EU-geld. ISO 27001 aanpak vertaalt naar ISO 14001 kansen.",
-   cpv:"90700000,71314000",
-   tnSearch:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=verduurzaming+energieadvies",
-   tedSearch:"https://ted.europa.eu/en/search?scope=ACTIVE&query=sustainability+energy+advice+netherlands"},
+  {ic:"🔧",title:"Medische After-Sales Service",fit:"Uitstekend",fp:"fp-hi",
+   desc:"Servicecontracten voor medische apparatuur: onderhoud, calibratie, helpdesk voor ziekenhuizen en klinieken. Jouw exacte achtergrond.",
+   tn:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=medische+apparatuur+service",
+   ted:"https://ted.europa.eu/en/search?scope=ACTIVE&query=medical+equipment+service+netherlands"},
+  {ic:"📋",title:"ISO/Compliance Auditing",fit:"Uitstekend",fp:"fp-hi",
+   desc:"Overheidsinstanties besteden BIO/NIS2/ISO 27001 audits en gap-analyses uit. Jouw certificering is hier direct geld waard — solo of als ZZP.",
+   tn:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=iso+27001+audit",
+   ted:"https://ted.europa.eu/en/search?scope=ACTIVE&query=ISO+27001+audit+netherlands"},
+  {ic:"🎓",title:"Training & Opleiding",fit:"Goed",fp:"fp-hi",
+   desc:"ISO 27001 awareness-trainingen, informatiebeveiliging, klantenservice. Lage drempel, kleine contractwaarden — ideaal als eerste referentie.",
+   tn:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=informatiebeveiligingstraining",
+   ted:"https://ted.europa.eu/en/search?scope=ACTIVE&query=training+informatiebeveiliging+nederland"},
+  {ic:"🏗️",title:"Bouw — Directievoering & Toezicht",fit:"Mogelijk",fp:"fp-md",
+   desc:"Als projectmanager/adviseur zonder uitvoerend team. ISO 27001 aanpak vertaalt naar smart building, BIM-security, en bouwproject-risicoanalyse.",
+   tn:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=directievoering+bouwtoezicht",
+   ted:"https://ted.europa.eu/en/search?scope=ACTIVE&query=construction+supervision+netherlands"},
+  {ic:"🧹",title:"Facilitaire Diensten",fit:"Laagste instap",fp:"fp-md",
+   desc:"Schoonmaak, catering, facilitair beheer. Veel lokale opdrachten, lage kennisdrempel. Hoge concurrentie maar perfect als eerste referentieproject.",
+   tn:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=schoonmaak+facilitair",
+   ted:"https://ted.europa.eu/en/search?scope=ACTIVE&query=cleaning+services+netherlands"},
+  {ic:"🔒",title:"Fysieke Beveiliging",fit:"Instap",fp:"fp-md",
+   desc:"Beveiligingsdiensten voor overheidspanden. Lage technische drempel. Combineer met receptiediensten voor een uniek service-pakket.",
+   tn:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=beveiligingsdiensten",
+   ted:"https://ted.europa.eu/en/search?scope=ACTIVE&query=security+services+netherlands"},
+  {ic:"🚐",title:"Vervoer & Logistiek",fit:"Instap",fp:"fp-lo",
+   desc:"Zorgvervoer, leerlingenvervoer. Kleine gemeentelijke contracten. Voertuigen nodig maar lage kennisdrempel.",
+   tn:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=zorgvervoer+leerlingenvervoer",
+   ted:"https://ted.europa.eu/en/search?scope=ACTIVE&query=transport+services+gemeente+netherlands"},
+  {ic:"♻️",title:"Duurzaamheid & Energieadvies",fit:"Groeiend",fp:"fp-lo",
+   desc:"Verduurzaming gebouwen, klimaatplannen, energieadvies. Groeiend budget door EU-regelgeving. ISO-mentaliteit vertaalt goed naar ISO 14001.",
+   tn:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=energieadvies+verduurzaming",
+   ted:"https://ted.europa.eu/en/search?scope=ACTIVE&query=energy+advice+sustainability+netherlands"},
+  {ic:"📣",title:"Communicatie & Campagnes",fit:"AI-kans",fp:"fp-lo",
+   desc:"Overheidscommunicatie, campagnes, drukwerk. AI-voordeel hier enorm voor contentproductie. Kleine contracten, snel te leveren.",
+   tn:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=communicatie+campagne+overheid",
+   ted:"https://ted.europa.eu/en/search?scope=ACTIVE&query=communication+campaign+netherlands"},
 ];
 
-// ===================== RENDER =====================
-function riskColor(r){return r<=2?'var(--green)':r===3?'var(--orange)':'var(--red)'}
-function riskLabel(r){return r<=2?'Laag':r===3?'Middel':'Hoog'}
-function formatEV(n){return n>=100000?'€'+(n/1000).toFixed(0)+'k':n>=1000?'€'+(n/1000).toFixed(0)+'k':'€'+n}
-function scoreClass(s){return s>=11?'sh':s>=9?'sm':'sl'}
-function deadlineLabel(d){return d==='urgent'?'⚠️':d==='soon'?'⏰':d==='ongoing'?'🔄':'✅'}
+const cpvLinks = [
+  {label:"🔧 Medische apparatuur onderhoud",cpv:"50420000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=50420000"},
+  {label:"📋 Auditdiensten",cpv:"79212000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=79212000"},
+  {label:"🎓 Opleiding beveiliging",cpv:"80510000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=80510000"},
+  {label:"🏗️ Bouwprojectmanagement",cpv:"45000000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=45000000"},
+  {label:"🔒 Beveiligingsdiensten",cpv:"79710000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=79710000"},
+  {label:"🧹 Schoonmaakdiensten",cpv:"90910000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=90910000"},
+  {label:"💼 Consultancy / Advies",cpv:"73200000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=73200000"},
+  {label:"🏥 Zorgdiensten",cpv:"85100000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=85100000"},
+  {label:"♻️ Milieu & Duurzaamheid",cpv:"90700000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=90700000"},
+];
 
-function loadNotes(id){return localStorage.getItem('note_'+id)||''}
-function saveNotes(id,v){localStorage.setItem('note_'+id,v)}
-function loadStatus(id){return localStorage.getItem('status_'+id)||'nieuw'}
-function saveStatus(id,v){localStorage.setItem('status_'+id,v)}
+// ============ RENDER ============
+function ls(k){return localStorage.getItem(k)||''}
+function lss(k,v){localStorage.setItem(k,v)}
+function riskC(r){return r<=2?'var(--em)':r===3?'var(--sun)':'var(--fire)'}
+function riskL(r){return r<=2?'Laag':r===3?'Middel':'Hoog'}
+function fmtEV(n){return n>=100000?'€'+(n/1000).toFixed(0)+'k':n>=1000?'€'+(n/1000).toFixed(0)+'k':'€'+n}
+function scCls(s){return s>=11?'sp-hi':s>=9?'sp-md':'sp-lo'}
 
-function buildTenderCard(t){
-  const div=document.createElement('div');
-  div.className=`tender-card t${t.tier}`;
-  div.id='card_'+t.id;
+function buildCard(t){
+  const d=document.createElement('div');
+  d.className=`tc t${t.tier}`;
+  d.id='tc_'+t.id;
 
-  const rp=(t.winProb/40)*100;
-  const ep=(t.ev/350000)*100;
-  const rPct=(t.risk/5)*100;
-
-  div.innerHTML=`
-    <div class="tender-main" onclick="toggleCard('${t.id}')">
-      <div class="rank">${t.rank}</div>
-      <div>
-        <div class="t-title">${t.sectorIcon} ${t.title}</div>
-        <div class="t-auth">${t.authority}</div>
-        <div class="t-sector" style="color:var(--muted)">${t.sector}</div>
-        <div class="t-deadline ${t.deadlineClass}">${deadlineLabel(t.deadlineClass)} ${t.deadline}</div>
+  d.innerHTML=`
+    <div class="tc-top">
+      <div class="tc-rank">${t.rank}</div>
+      <div class="tc-main">
+        <div class="tc-title">
+          <a href="${t.tnUrl}" target="_blank" title="Open op TenderNed">${t.icon} ${t.title}</a>
+          <span class="tn-pill">TN ${t.tnId}</span>
+        </div>
+        <div class="tc-auth">${t.auth} · ${t.sector}</div>
+        <div class="tc-dead ${t.dlClass}">${t.deadline}</div>
       </div>
-      <div class="metric">
-        <div class="num" style="font-size:12px;color:var(--text)">${t.value}</div>
-        <div class="sub">Contractwaarde</div>
+      <div class="met">
+        <div class="n" style="font-size:12px;color:var(--text)">${t.value}</div>
+        <div class="s">Contractwaarde</div>
       </div>
-      <div class="metric">
-        <div class="num" style="color:var(--green)">${formatEV(t.ev)}</div>
-        <div class="sub">Verwachte winst</div>
-        <div class="bar"><div class="fill bg-green" style="width:${Math.min(100,ep)}%"></div></div>
+      <div class="met">
+        <div class="n" style="color:var(--em)">${fmtEV(t.ev)}</div>
+        <div class="s">Verwachte winst</div>
+        <div class="minibar"><div class="f" style="width:${Math.min(100,t.ev/3500)}%;background:var(--em)"></div></div>
       </div>
-      <div class="metric">
-        <div class="num" style="color:var(--accent)">${t.winProb}%</div>
-        <div class="sub">Winkans</div>
-        <div class="bar"><div class="fill bg-blue" style="width:${Math.min(100,rp)}%"></div></div>
+      <div class="met">
+        <div class="n" style="color:var(--sky)">${t.winProb}%</div>
+        <div class="s">Winkans</div>
+        <div class="minibar"><div class="f" style="width:${t.winProb*2.5}%;background:var(--sky)"></div></div>
       </div>
-      <div class="metric">
-        <div class="num" style="color:var(--muted)">${t.timeH}u</div>
-        <div class="sub">Uren prep</div>
-        <div class="bar"><div class="fill bg-purple" style="width:${Math.min(100,(t.timeH/300)*100)}%"></div></div>
+      <div class="met">
+        <div class="n" style="color:var(--muted)">${t.timeH}u</div>
+        <div class="s">Uren prep</div>
+        <div class="minibar"><div class="f" style="width:${Math.min(100,(t.timeH/300)*100)}%;background:var(--sun)"></div></div>
       </div>
-      <div class="metric">
-        <div class="num" style="color:${riskColor(t.risk)}">${riskLabel(t.risk)}</div>
-        <div class="sub">Risico</div>
-        <div class="bar"><div class="fill" style="width:${rPct}%;background:${riskColor(t.risk)}"></div></div>
+      <div class="met">
+        <div class="n" style="color:${riskC(t.risk)}">${riskL(t.risk)}</div>
+        <div class="s">Risico</div>
+        <div class="minibar"><div class="f" style="width:${(t.risk/5)*100}%;background:${riskC(t.risk)}"></div></div>
       </div>
-      <div class="score-box ${scoreClass(t.score)}">
-        <div class="big">${t.score}<span style="font-size:12px;color:var(--muted)">/15</span></div>
-        <div class="lbl">Score</div>
+      <div class="score-pip ${scCls(t.score)}">
+        <div class="big">${t.score}<span style="font-size:11px;color:var(--muted)">/15</span></div>
+        <div class="sub">Score</div>
       </div>
-      <div class="expand-icon" style="display:none">▼</div>
+      <div class="toggle-btn" onclick="toggleCard('${t.id}')">▼</div>
     </div>
-    <div class="tender-detail">
-      <div style="background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.2);border-radius:8px;padding:12px;margin-bottom:14px;font-size:12px;color:var(--muted)">
-        💡 <strong style="color:var(--text)">Waarom jij?</strong> ${t.why}
-      </div>
-      <div class="detail-grid">
-        <div class="detail-section">
+    <div class="tc-detail">
+      <div class="why-box">💡 <strong>Waarom jij?</strong> ${t.why}</div>
+      <div class="detail-cols">
+        <div class="dc">
           <h4>📄 Documenten & Links</h4>
-          <div style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:6px;padding:8px 10px;margin-bottom:10px;font-size:11px;color:var(--green)">
-            ✅ TenderNed account = <strong>gratis</strong> — geen abonnement nodig
+          <div style="background:rgba(0,229,160,.07);border:1px solid rgba(0,229,160,.2);border-radius:6px;padding:8px 10px;margin-bottom:10px;font-size:11px;color:var(--em)">
+            ✅ TenderNed account = gratis · geen abonnement
           </div>
-          ${t.docs.map(d=>`
-            <a href="${d.url}" target="_blank" class="doc-link">
-              <div class="doc-icon">📑</div>
-              <div class="doc-info">
-                <div class="doc-name">${d.name}</div>
-                <div class="doc-sub">${d.sub}</div>
-              </div>
-              <span class="doc-status ${d.status}">${d.status==='free'?'Gratis':'Na login'}</span>
+          ${t.docs.map(doc=>`
+            <a href="${doc.url}" target="_blank" class="doc-row">
+              <span style="font-size:16px">📑</span>
+              <div class="di"><div class="dn">${doc.name}</div><div class="ds">${doc.sub}</div></div>
+              <span class="${doc.free?'tag-free':'tag-login'}">${doc.free?'Gratis':'Na login'}</span>
             </a>
           `).join('')}
-          <a href="${t.tnUrl}" target="_blank" style="display:block;margin-top:10px;background:var(--accent);color:#fff;text-align:center;padding:8px;border-radius:6px;font-weight:700;font-size:12px;text-decoration:none">
-            🔗 Open op TenderNed (ID: ${t.tnId})
-          </a>
-          <a href="${t.tedUrl}" target="_blank" style="display:block;margin-top:6px;background:var(--surface2);border:1px solid var(--border);color:var(--muted);text-align:center;padding:7px;border-radius:6px;font-weight:600;font-size:11px;text-decoration:none">
-            🌍 Zoek op TED Europa (gratis)
-          </a>
+          <a href="${t.tnUrl}" target="_blank" class="btn-tn">🔗 Open TenderNed (ID: ${t.tnId})</a>
+          <a href="${t.tedUrl}" target="_blank" class="btn-ted">🌍 TED Europa (gratis, geen login)</a>
         </div>
-        <div class="detail-section">
-          <h4>ℹ️ Tender Details</h4>
-          <div class="info-row">
-            ${t.infos.map(i=>`<div class="info-item"><span class="key">${i.k}</span><span class="val">${i.v}</span></div>`).join('')}
+        <div class="dc">
+          <h4>ℹ️ Details</h4>
+          <div class="info-table">
+            ${t.infos.map(i=>`<div class="irow"><span class="ik">${i.k}</span><span class="iv">${i.v}</span></div>`).join('')}
           </div>
         </div>
-        <div class="detail-section">
+        <div class="dc">
           <h4>📝 Jouw Notities</h4>
-          <div style="margin-bottom:8px">
-            <label style="font-size:11px;color:var(--muted)">Status</label>
-            <select class="status-select" onchange="saveStatus('${t.id}',this.value)" id="status_${t.id}">
-              <option value="nieuw">🔵 Nieuw</option>
-              <option value="bekijken">👁️ Aan het bekijken</option>
-              <option value="documenten">📄 Documenten gelezen</option>
-              <option value="partner">🤝 Partner zoeken</option>
-              <option value="inschrijven">✍️ Inschrijven</option>
-              <option value="ingediend">✅ Ingediend</option>
-              <option value="gewonnen">🏆 Gewonnen</option>
-              <option value="verloren">❌ Verloren</option>
-              <option value="skip">⏭️ Overgeslagen</option>
-            </select>
-          </div>
-          <textarea class="notes-area" placeholder="Notities, contacten, indrukken..." id="note_${t.id}">${loadNotes(t.id)}</textarea>
-          <button class="save-note" onclick="saveNotes('${t.id}',document.getElementById('note_${t.id}').value);this.textContent='✅ Opgeslagen'">💾 Opslaan</button>
+          <div class="notes-label">Status</div>
+          <select class="status-sel" id="sel_${t.id}" onchange="lss('st_${t.id}',this.value)">
+            <option value="nieuw">🔵 Nieuw</option>
+            <option value="kijken">👁️ Aan het bekijken</option>
+            <option value="docs">📄 Documenten gelezen</option>
+            <option value="partner">🤝 Partner zoeken</option>
+            <option value="inschrijven">✍️ Inschrijven</option>
+            <option value="ingediend">✅ Ingediend</option>
+            <option value="gewonnen">🏆 Gewonnen!</option>
+            <option value="verloren">❌ Verloren</option>
+          </select>
+          <div class="notes-label">Notities</div>
+          <textarea class="notes-ta" id="nt_${t.id}" placeholder="Contacten, indrukken, volgende stap...">${ls('nt_'+t.id)}</textarea>
+          <button class="save-btn" onclick="lss('nt_${t.id}',document.getElementById('nt_${t.id}').value);this.textContent='✅ Opgeslagen';setTimeout(()=>this.textContent='💾 Opslaan',2000)">💾 Opslaan</button>
         </div>
       </div>
     </div>
   `;
 
-  // restore status
   setTimeout(()=>{
-    const sel=div.querySelector('#status_'+t.id);
-    if(sel) sel.value=loadStatus(t.id);
+    const sel=d.querySelector('#sel_'+t.id);
+    if(sel && ls('st_'+t.id)) sel.value=ls('st_'+t.id);
   },0);
 
-  return div;
+  return d;
 }
 
 function toggleCard(id){
-  const card=document.getElementById('card_'+id);
-  card.classList.toggle('open');
+  document.getElementById('tc_'+id).classList.toggle('open');
 }
 
-// Render tenders
+function switchTab(name){
+  document.querySelectorAll('.nav-item').forEach(n=>{n.classList.remove('active');if(n.dataset.tab===name)n.classList.add('active')});
+  document.querySelectorAll('.pane').forEach(p=>{p.classList.remove('active');if(p.id==='pane-'+name)p.classList.add('active')});
+}
+
 document.addEventListener('DOMContentLoaded',()=>{
-  const t1=document.getElementById('tier1-list');
-  const t2=document.getElementById('tier2-list');
-  const t3=document.getElementById('tier3-list');
-  const all=document.getElementById('all-tender-list');
-
+  // Render tenders
   tenders.forEach(t=>{
-    const card=buildTenderCard(t);
-    if(t.tier===1) t1.appendChild(card.cloneNode(true));
-    else if(t.tier===2) t2.appendChild(card.cloneNode(true));
-    else t3.appendChild(card.cloneNode(true));
-    all.appendChild(buildTenderCard(t));
+    if(t.tier===1) document.getElementById('t1-dash').appendChild(buildCard(t));
+    else if(t.tier===2) document.getElementById('t2-dash').appendChild(buildCard(t));
+    else document.getElementById('t3-dash').appendChild(buildCard(t));
+    document.getElementById('all-list').appendChild(buildCard(t));
   });
 
-  // Re-attach toggle on cloned nodes
-  document.querySelectorAll('.tender-main').forEach(el=>{
-    el.addEventListener('click',function(){
-      this.closest('.tender-card').classList.toggle('open');
-    });
-  });
-  document.querySelectorAll('.status-select').forEach(sel=>{
-    const id=sel.id.replace('status_','');
-    sel.value=loadStatus(id);
-    sel.addEventListener('change',function(){saveStatus(id,this.value)});
+  // Re-attach status selects
+  document.querySelectorAll('.status-sel').forEach(sel=>{
+    const id=sel.id.replace('sel_','');
+    const saved=ls('st_'+id);
+    if(saved) sel.value=saved;
   });
 
-  // SECTORS
-  const sg=document.getElementById('sector-grid');
+  // Non-IT tenders
+  const nitList=document.getElementById('nit-list');
+  nonITTenders.forEach(t=>{
+    const d=document.createElement('div');
+    d.className='nit-card'+(t.best?' best':'');
+    d.innerHTML=`
+      <div class="nit-left">
+        ${t.best?'<div class="nit-best-badge">⭐ Aanbevolen voor jou</div>':''}
+        <div class="nit-title">${t.icon} ${t.title}</div>
+        <div class="nit-auth">${t.auth} · ${t.sector}</div>
+        <div class="nit-dead">⏰ ${t.deadline}</div>
+        <div class="diff-stars">${'⬛'.repeat(t.diff)}${'⬜'.repeat(5-t.diff)} Moeilijkheid ${t.diff}/5</div>
+        <div class="nit-why">${t.why}</div>
+      </div>
+      <div class="nit-right">
+        <div class="nit-val-box"><div class="nv">${t.value}</div><div class="nl">Contractwaarde</div></div>
+        <a href="${t.tnUrl}" target="_blank" class="nit-btn">🔗 Open TenderNed</a>
+      </div>
+    `;
+    nitList.appendChild(d);
+  });
+
+  // Sectors
+  const sg=document.getElementById('sec-grid');
   sectors.forEach(s=>{
     const d=document.createElement('div');
-    d.className='sector-card';
+    d.className='sc';
     d.innerHTML=`
-      <div class="icon">${s.icon}</div>
+      <div class="ic">${s.ic}</div>
       <h4>${s.title}</h4>
       <p>${s.desc}</p>
-      <span class="fit ${s.fitClass}">${s.fit}</span>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
-        <a href="${s.tnSearch}" target="_blank" class="search-btn">🔍 TenderNed zoeken</a>
-        <a href="${s.tedSearch}" target="_blank" class="search-btn">🌍 TED Europa</a>
+      <span class="fit-pill ${s.fp}">${s.fit}</span>
+      <div class="sc-links">
+        <a href="${s.tn}" target="_blank" class="sc-link">🔍 TenderNed</a>
+        <a href="${s.ted}" target="_blank" class="sc-link">🌍 TED Europa</a>
       </div>
     `;
     sg.appendChild(d);
   });
 
-  // CPV direct links
-  const cpvLinks=[
-    {label:"🏥 Medische apparatuur service",cpv:"50420000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=50420000"},
-    {label:"📋 Auditdiensten (ISO/compliance)",cpv:"79212000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=79212000"},
-    {label:"🎓 Training informatiebeveiliging",cpv:"80510000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=80510000"},
-    {label:"🏗️ Bouwprojectmanagement",cpv:"45000000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=45000000"},
-    {label:"🔒 Beveiligingsdiensten",cpv:"79710000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=79710000"},
-    {label:"🧹 Facilitair / Schoonmaak",cpv:"90910000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=90910000"},
-    {label:"💼 Consultancy diensten",cpv:"73200000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=73200000"},
-    {label:"🚑 Zorggerelateerde diensten",cpv:"85100000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=85100000"},
-    {label:"🌱 Milieu & Duurzaamheid",cpv:"90700000",url:"https://www.tenderned.nl/aankondigingen/overzicht?cpvcodes=90700000"},
-  ];
-  const cl=document.getElementById('cpv-links');
+  // CPV grid
+  const cg=document.getElementById('cpv-grid');
   cpvLinks.forEach(c=>{
     const d=document.createElement('a');
-    d.href=c.url;
-    d.target="_blank";
-    d.className="doc-link";
-    d.style.textDecoration="none";
-    d.innerHTML=`<div class="doc-info"><div class="doc-name">${c.label}</div><div class="doc-sub">CPV: ${c.cpv}</div></div><span class="doc-status free">Gratis</span>`;
-    cl.appendChild(d);
+    d.href=c.url;d.target='_blank';d.className='cpv-item';
+    d.innerHTML=`<div><div class="cn">${c.label}</div><div class="cc">CPV: ${c.cpv}</div></div><span style="font-size:10px;background:rgba(0,229,160,.1);color:var(--em);border:1px solid rgba(0,229,160,.2);border-radius:4px;padding:2px 7px;font-weight:700">Gratis</span>`;
+    cg.appendChild(d);
   });
 
-  // CHARTS
   buildCharts();
 });
 
 function buildCharts(){
-  const colors=tenders.map(t=>t.tier===1?'rgba(34,197,94,.75)':t.tier===2?'rgba(245,158,11,.75)':'rgba(239,68,68,.6)');
-  const labels=tenders.map(t=>t.title.length>18?t.title.slice(0,18)+'…':t.title);
+  const c1=tenders.map(t=>t.tier===1?'rgba(0,229,160,.75)':t.tier===2?'rgba(255,200,69,.75)':'rgba(255,95,46,.6)');
+  const lbl=tenders.map(t=>t.title.length>18?t.title.slice(0,18)+'…':t.title);
 
   new Chart(document.getElementById('evChart'),{
     type:'bar',
-    data:{labels,datasets:[{label:'Verwachte Winst (€)',data:tenders.map(t=>t.ev),backgroundColor:colors,borderRadius:4,borderSkipped:false}]},
+    data:{labels:lbl,datasets:[{data:tenders.map(t=>t.ev),backgroundColor:c1,borderRadius:5,borderSkipped:false}]},
     options:{responsive:true,maintainAspectRatio:false,
       plugins:{legend:{display:false}},
-      scales:{
-        x:{ticks:{color:'#8892a4',font:{size:9}},grid:{color:'#2e3347'}},
-        y:{ticks:{color:'#8892a4',font:{size:10},callback:v=>v>=1000?'€'+(v/1000).toFixed(0)+'k':'€'+v},grid:{color:'#2e3347'}}
-      }}
+      scales:{x:{ticks:{color:'#6b7f99',font:{size:9}},grid:{color:'#1c2840'}},
+              y:{ticks:{color:'#6b7f99',font:{size:10},callback:v=>v>=1000?'€'+(v/1000).toFixed(0)+'k':'€'+v},grid:{color:'#1c2840'}}}}
   });
 
   new Chart(document.getElementById('scatterChart'),{
     type:'bubble',
     data:{datasets:[
-      {label:'Tier 1',data:tenders.filter(t=>t.tier===1).map(t=>({x:t.risk,y:t.pot,r:t.kans*5,title:t.title})),backgroundColor:'rgba(34,197,94,.65)',borderColor:'rgba(34,197,94,.9)'},
-      {label:'Tier 2',data:tenders.filter(t=>t.tier===2).map(t=>({x:t.risk,y:t.pot,r:t.kans*5,title:t.title})),backgroundColor:'rgba(245,158,11,.65)',borderColor:'rgba(245,158,11,.9)'},
-      {label:'Tier 3',data:tenders.filter(t=>t.tier===3).map(t=>({x:t.risk,y:t.pot,r:t.kans*5,title:t.title})),backgroundColor:'rgba(239,68,68,.5)',borderColor:'rgba(239,68,68,.8)'},
+      {label:'Tier 1',data:tenders.filter(t=>t.tier===1).map(t=>({x:t.risk,y:t.pot,r:t.kans*5})),backgroundColor:'rgba(0,229,160,.6)',borderColor:'rgba(0,229,160,.9)'},
+      {label:'Tier 2',data:tenders.filter(t=>t.tier===2).map(t=>({x:t.risk,y:t.pot,r:t.kans*5})),backgroundColor:'rgba(255,200,69,.6)',borderColor:'rgba(255,200,69,.9)'},
+      {label:'Tier 3',data:tenders.filter(t=>t.tier===3).map(t=>({x:t.risk,y:t.pot,r:t.kans*5})),backgroundColor:'rgba(255,95,46,.5)',borderColor:'rgba(255,95,46,.8)'},
     ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:'#8892a4',font:{size:11}}}},
-      scales:{
-        x:{min:0,max:6,title:{display:true,text:'Risico →',color:'#8892a4',font:{size:10}},ticks:{color:'#8892a4',font:{size:9}},grid:{color:'#2e3347'}},
-        y:{min:0,max:6,title:{display:true,text:'Potentie →',color:'#8892a4',font:{size:10}},ticks:{color:'#8892a4',font:{size:9}},grid:{color:'#2e3347'}}
-      }}
+      plugins:{legend:{labels:{color:'#6b7f99',font:{size:10}}}},
+      scales:{x:{min:0,max:6,title:{display:true,text:'Risico →',color:'#6b7f99',font:{size:10}},ticks:{color:'#6b7f99',font:{size:9}},grid:{color:'#1c2840'}},
+              y:{min:0,max:6,title:{display:true,text:'Potentie →',color:'#6b7f99',font:{size:10}},ticks:{color:'#6b7f99',font:{size:9}},grid:{color:'#1c2840'}}}}
   });
 
   new Chart(document.getElementById('timeChart'),{
     type:'bar',
-    data:{
-      labels,
-      datasets:[
-        {label:'Score (/15)',data:tenders.map(t=>t.score),backgroundColor:'rgba(79,142,247,.7)',borderRadius:3,yAxisID:'y'},
-        {label:'Uren prep',data:tenders.map(t=>t.timeH),type:'line',tension:.3,borderColor:'rgba(124,92,191,.8)',backgroundColor:'rgba(124,92,191,.1)',pointBackgroundColor:'rgba(124,92,191,.9)',fill:false,yAxisID:'y2'}
-      ]
-    },
+    data:{labels:lbl,datasets:[
+      {label:'Score',data:tenders.map(t=>t.score),backgroundColor:'rgba(0,229,160,.6)',borderRadius:4,yAxisID:'y'},
+      {label:'Uren prep',data:tenders.map(t=>t.timeH),type:'line',tension:.3,borderColor:'rgba(255,200,69,.8)',backgroundColor:'transparent',pointBackgroundColor:'rgba(255,200,69,.9)',fill:false,yAxisID:'y2'}
+    ]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:'#8892a4',font:{size:10}}}},
-      scales:{
-        x:{ticks:{color:'#8892a4',font:{size:9}},grid:{color:'#2e3347'}},
-        y:{min:0,max:16,ticks:{color:'#4f8ef7',font:{size:9}},grid:{color:'#2e3347'},title:{display:true,text:'Score',color:'#4f8ef7',font:{size:9}}},
-        y2:{position:'right',ticks:{color:'#7c5cbf',font:{size:9}},grid:{display:false},title:{display:true,text:'Uren',color:'#7c5cbf',font:{size:9}}}
-      }}
+      plugins:{legend:{labels:{color:'#6b7f99',font:{size:10}}}},
+      scales:{x:{ticks:{color:'#6b7f99',font:{size:9}},grid:{color:'#1c2840'}},
+              y:{min:0,max:16,ticks:{color:'#00e5a0',font:{size:9}},grid:{color:'#1c2840'},title:{display:true,text:'Score',color:'#00e5a0',font:{size:9}}},
+              y2:{position:'right',ticks:{color:'#ffc845',font:{size:9}},grid:{display:false},title:{display:true,text:'Uren',color:'#ffc845',font:{size:9}}}}}
   });
-}
-
-function switchTab(name){
-  document.querySelectorAll('.tab').forEach(t=>{t.classList.remove('active');if(t.dataset.tab===name)t.classList.add('active')});
-  document.querySelectorAll('.tab-pane').forEach(p=>{p.classList.remove('active');if(p.id==='tab-'+name)p.classList.add('active')});
 }
 
 function copyCode(btn){
-  const code=btn.previousElementSibling.textContent;
-  navigator.clipboard.writeText(code).then(()=>{btn.textContent='✅ Gekopieerd!';setTimeout(()=>btn.textContent='📋 Kopieer',2000)});
+  navigator.clipboard.writeText(btn.previousElementSibling.textContent)
+    .then(()=>{btn.textContent='✅ Gekopieerd!';setTimeout(()=>btn.textContent='📋 Kopieer',2000)});
 }
-
-// Inject non-IT tenders when loaded
-const nonITTenders = [
-  {icon:"🔧",title:"Onderhoud Medische Apparatuur Eerstelijns",
-   authority:"Regionale zorgcoöperatie (eerstelijns)",sector:"Medische After-Sales",
-   deadline:"Controleer direct — TN 326643",
-   value:"~€170.000/jaar",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/326643",
-   diff:2,
-   why:"⭐ BESTE FIT voor jou. Servicecontract voor medische apparatuur in huisartsenpraktijken. Jouw 11 jaar medische after-sales ervaring is exact wat ze zoeken. ISO 27001 dekt eventuele datavereisten. Realistisch solo of als klein bedrijf te winnen."},
-  {icon:"📺",title:"Schoonmaakdienstverlening RTV Utrecht",
-   authority:"RTV Utrecht",sector:"Facilitair / Schoonmaak",
-   deadline:"April–mei 2026 — controleer TN 413089",
-   value:"Niet gepubliceerd (klein)",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/413089",
-   diff:1,
-   why:"🏆 BESTE EERSTE TENDER om het proces te leren. Één locatie (studio Utrecht), nationale procedure (minder papierwerk), kleine scope. Ideaal om te oefenen met inschrijven. Partner met een schoonmaakbedrijf — jij regelt het contract en de kwaliteitsbewaking."},
-  {icon:"🏫",title:"Schoonmaakonderhoud Archipel Scholen",
-   authority:"Archipel Scholen ('t Gooi regio)",sector:"Facilitair / Schoonmaak",
-   deadline:"~27 mei 2026",
-   value:"€3.578.000 (3 jaar)",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/417000",
-   diff:2,
-   why:"15 schoollocaties, duidelijke scope (16.000m² vloer + 8.000m² glas). Eén winnaar. Haalbaar als hoofdaannemer met een schoonmaak-onderaannemer. AI-voordeel: automatische KPI-dashboards en kostenoptimalisatie in je offerte."},
-  {icon:"🏥",title:"Schoonmaak Stichting Aurelia (Zorglocaties)",
-   authority:"Stichting Aurelia (zorgsector)",sector:"Zorg Facilitair / Schoonmaak",
-   deadline:"April–mei 2026 — controleer TN 405374",
-   value:"€22.420.000 (8 jaar max)",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/405374",
-   diff:3,
-   why:"Zorginstelling = hygiëneprotocollen, besmettingsrisico, medische omgeving. Jouw medische achtergrond is hier een echte differentiator. Grotere omvang dus IT-partner + schoonmaakoperator nodig, maar jij bent de juiste persoon om de kwaliteitsborging te leiden."},
-  {icon:"🎓",title:"Schoonmaak Segbroek College Den Haag",
-   authority:"Stichting VO Haaglanden",sector:"Facilitair / Schoonmaak",
-   deadline:"~13 mei 2026",
-   value:"Klein (1 locatie, 7.610m²)",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=segbroek+college+schoonmaak",
-   diff:2,
-   why:"Kleine school in Den Haag, nationale procedure. 2 locaties, heldere eisen. Goed als tweede tender na RTV Utrecht. Let op: er was een locatiebezoek op 8 april — check of je nog kunt inschrijven."},
-  {icon:"🔒",title:"Beveiliging en Receptie Dienstverlening",
-   authority:"Nationale overheidsinstantie",sector:"Beveiliging / Receptie",
-   deadline:"Controleer direct — TN 403065",
-   value:"Niet gepubliceerd",
-   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/403065",
-   diff:3,
-   why:"Combinatie beveiliging + receptiediensten. Jouw klantenservice-achtergrond is relevant voor het receptiegedeelte. Let op: check of percelen beschikbaar zijn — het receptiedeel kan soms apart worden aangeboden."},
-];
-
-// Auto-render on DOM ready
-document.addEventListener('DOMContentLoaded',()=>{
-  const title=document.getElementById('nonit-title');
-  if(title){title.style.display='block';title.textContent='📋 Gevonden Niet-IT Tenders ('+nonITTenders.length+')';}
-  window.addNonITTenders(nonITTenders);
-});
-
-window.addNonITTenders = function(list){
-  const container=document.getElementById('nonit-list');
-  const title=document.getElementById('nonit-title');
-  if(title) title.style.display='block';
-  list.forEach((t,i)=>{
-    const d=document.createElement('div');
-    d.style.cssText='background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--orange);border-radius:10px;padding:16px 18px;margin-bottom:10px';
-    d.innerHTML=`
-      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
-        <div>
-          <div style="font-weight:700;font-size:14px">${t.icon||'📋'} ${t.title}</div>
-          <div style="font-size:11px;color:var(--muted);margin-top:3px">${t.authority} · ${t.sector}</div>
-          <div style="font-size:11px;color:var(--orange);margin-top:4px;font-weight:600">⏰ ${t.deadline}</div>
-          <div style="font-size:12px;color:var(--muted);margin-top:6px;max-width:600px">${t.why}</div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:6px;min-width:160px">
-          <div style="text-align:center;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px">
-            <div style="font-size:18px;font-weight:800;color:var(--orange)">${t.value}</div>
-            <div style="font-size:10px;color:var(--muted)">Contractwaarde</div>
-          </div>
-          ${t.tnUrl?`<a href="${t.tnUrl}" target="_blank" style="display:block;background:var(--accent);color:#fff;text-align:center;padding:7px;border-radius:6px;font-weight:700;font-size:11px;text-decoration:none">🔗 TenderNed</a>`:''}
-        </div>
-      </div>
-    `;
-    container.appendChild(d);
-  });
-};
 </script>
 </body>
 </html>
