@@ -897,6 +897,58 @@ function copyCode(btn){
 }
 
 // Inject non-IT tenders when loaded
+const nonITTenders = [
+  {icon:"🔧",title:"Onderhoud Medische Apparatuur Eerstelijns",
+   authority:"Regionale zorgcoöperatie (eerstelijns)",sector:"Medische After-Sales",
+   deadline:"Controleer direct — TN 326643",
+   value:"~€170.000/jaar",
+   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/326643",
+   diff:2,
+   why:"⭐ BESTE FIT voor jou. Servicecontract voor medische apparatuur in huisartsenpraktijken. Jouw 11 jaar medische after-sales ervaring is exact wat ze zoeken. ISO 27001 dekt eventuele datavereisten. Realistisch solo of als klein bedrijf te winnen."},
+  {icon:"📺",title:"Schoonmaakdienstverlening RTV Utrecht",
+   authority:"RTV Utrecht",sector:"Facilitair / Schoonmaak",
+   deadline:"April–mei 2026 — controleer TN 413089",
+   value:"Niet gepubliceerd (klein)",
+   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/413089",
+   diff:1,
+   why:"🏆 BESTE EERSTE TENDER om het proces te leren. Één locatie (studio Utrecht), nationale procedure (minder papierwerk), kleine scope. Ideaal om te oefenen met inschrijven. Partner met een schoonmaakbedrijf — jij regelt het contract en de kwaliteitsbewaking."},
+  {icon:"🏫",title:"Schoonmaakonderhoud Archipel Scholen",
+   authority:"Archipel Scholen ('t Gooi regio)",sector:"Facilitair / Schoonmaak",
+   deadline:"~27 mei 2026",
+   value:"€3.578.000 (3 jaar)",
+   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/417000",
+   diff:2,
+   why:"15 schoollocaties, duidelijke scope (16.000m² vloer + 8.000m² glas). Eén winnaar. Haalbaar als hoofdaannemer met een schoonmaak-onderaannemer. AI-voordeel: automatische KPI-dashboards en kostenoptimalisatie in je offerte."},
+  {icon:"🏥",title:"Schoonmaak Stichting Aurelia (Zorglocaties)",
+   authority:"Stichting Aurelia (zorgsector)",sector:"Zorg Facilitair / Schoonmaak",
+   deadline:"April–mei 2026 — controleer TN 405374",
+   value:"€22.420.000 (8 jaar max)",
+   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/405374",
+   diff:3,
+   why:"Zorginstelling = hygiëneprotocollen, besmettingsrisico, medische omgeving. Jouw medische achtergrond is hier een echte differentiator. Grotere omvang dus IT-partner + schoonmaakoperator nodig, maar jij bent de juiste persoon om de kwaliteitsborging te leiden."},
+  {icon:"🎓",title:"Schoonmaak Segbroek College Den Haag",
+   authority:"Stichting VO Haaglanden",sector:"Facilitair / Schoonmaak",
+   deadline:"~13 mei 2026",
+   value:"Klein (1 locatie, 7.610m²)",
+   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht?keyword=segbroek+college+schoonmaak",
+   diff:2,
+   why:"Kleine school in Den Haag, nationale procedure. 2 locaties, heldere eisen. Goed als tweede tender na RTV Utrecht. Let op: er was een locatiebezoek op 8 april — check of je nog kunt inschrijven."},
+  {icon:"🔒",title:"Beveiliging en Receptie Dienstverlening",
+   authority:"Nationale overheidsinstantie",sector:"Beveiliging / Receptie",
+   deadline:"Controleer direct — TN 403065",
+   value:"Niet gepubliceerd",
+   tnUrl:"https://www.tenderned.nl/aankondigingen/overzicht/403065",
+   diff:3,
+   why:"Combinatie beveiliging + receptiediensten. Jouw klantenservice-achtergrond is relevant voor het receptiegedeelte. Let op: check of percelen beschikbaar zijn — het receptiedeel kan soms apart worden aangeboden."},
+];
+
+// Auto-render on DOM ready
+document.addEventListener('DOMContentLoaded',()=>{
+  const title=document.getElementById('nonit-title');
+  if(title){title.style.display='block';title.textContent='📋 Gevonden Niet-IT Tenders ('+nonITTenders.length+')';}
+  window.addNonITTenders(nonITTenders);
+});
+
 window.addNonITTenders = function(list){
   const container=document.getElementById('nonit-list');
   const title=document.getElementById('nonit-title');
